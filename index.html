@@ -1,125 +1,201 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>变量道 · Variable Path</title>
-  <meta name="description" content="自由的本质，在于未被设定性。变量道 · Variable Path" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="变量道 · Variable Path — 简洁、克制、以人为本的知识与项目集合。" />
+  <title>Variable Path</title>
   <style>
     :root{
-      --bg:#ffffff; --fg:#111111; --muted:#5b5b5b; --line:#eaeaea; --accent:#111111;
+      --bg:#ffffff; --fg:#111111; --muted:#6b7280; --muted-2:#9ca3af;
+      --card:#ffffff; --accent:#111111; --link:#0ea5e9; --shadow:rgba(0,0,0,.06);
     }
     @media (prefers-color-scheme: dark){
-      :root{ --bg:#0d0e10; --fg:#eaeaea; --muted:#a1a1a1; --line:#1c1d20; --accent:#eaeaea; }
+      :root{ --bg:#0d0e10; --fg:#eaeaea; --muted:#a3a3a3; --muted-2:#8a8a8a;
+             --card:#111317; --accent:#eaeaea; --link:#38bdf8; --shadow:rgba(0,0,0,.3);}
     }
-    *{ box-sizing:border-box; }
-    html{ scroll-behavior:smooth; }
-    body{
-      margin:0; background:var(--bg); color:var(--fg);
-      font: 400 16px/1.7 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,"Noto Sans CJK SC","PingFang SC","Hiragino Sans GB","Microsoft YaHei",Helvetica,Arial,sans-serif;
-    }
-    .container{ max-width: 860px; margin:0 auto; padding: 0 20px; }
-    /* Header */
-    .header{
-      position:sticky; top:0; z-index:10;
-      backdrop-filter:saturate(180%) blur(8px);
-      background:rgba(255,255,255,.75); border-bottom:1px solid var(--line);
-    }
-    @media (prefers-color-scheme: dark){
-      .header{ background:rgba(13,14,16,.7); }
-    }
-    .nav{ display:flex; align-items:center; gap:18px; height:58px; }
-    .brand{ font-weight:800; letter-spacing:.5px; text-decoration:none; color:var(--fg); }
-    .nav a{ color:var(--fg); text-decoration:none; opacity:.78; }
-    .nav a:hover{ opacity:1; }
-    /* Sections */
-    section{ padding:72px 0; border-bottom:1px solid var(--line); }
-    .hero{ padding:110px 0 64px; text-align:center; }
-    h1{ margin:0 0 12px; font-size:clamp(28px,6vw,56px); line-height:1.1; }
-    .lead{ margin:8px 0 24px; font-size:clamp(16px,3.6vw,20px); color:var(--muted); }
-    .btn{
-      display:inline-block; padding:10px 18px; border:1.2px solid var(--accent);
-      color:var(--fg); text-decoration:none; border-radius:999px; font-weight:600;
-    }
-    h2{ margin:0 0 12px; font-size:22px; }
-    p{ margin:10px 0; }
-    .list{ padding:0; margin:12px 0 0; list-style:none; }
-    .item{ padding:14px 0; border-top:1px dashed var(--line); display:flex; gap:10px; align-items:baseline; }
-    .item time{ font-variant-numeric: tabular-nums; color:var(--muted); width:92px; flex:0 0 92px; }
-    .foot{ padding:36px 0 60px; text-align:center; color:var(--muted); font-size:14px; }
-    .tag{ font-size:12px; padding:2px 8px; border:1px solid var(--line); border-radius:999px; color:var(--muted); }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;background:var(--bg);color:var(--fg);font:16px/1.6 ui-sans-serif,system-ui,-apple-system,"Segoe UI","PingFang SC","Hiragino Sans GB","Noto Sans CJK SC","Microsoft YaHei","Noto Sans JP","Noto Sans KR",Arial}
+    a{color:var(--link);text-decoration:none}
+    a:hover{opacity:.9}
+    .container{max-width:960px;margin:0 auto;padding:24px}
+    header{position:sticky;top:0;z-index:10;background:rgba(255,255,255,.75);backdrop-filter:saturate(160%) blur(8px);border-bottom:1px solid rgba(0,0,0,.06)}
+    @media (prefers-color-scheme: dark){ header{background:rgba(13,14,16,.65); border-bottom:1px solid rgba(255,255,255,.05)} }
+    .nav{display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .brand{font-weight:800;letter-spacing:.2px}
+    .lang{display:flex;align-items:center;gap:8px}
+    select{appearance:none;background:var(--card);color:var(--fg);border:1px solid rgba(0,0,0,.08);padding:8px 10px;border-radius:10px}
+    @media (prefers-color-scheme: dark){ select{border-color:rgba(255,255,255,.08)} }
+    .hero{padding:64px 0 48px}
+    .kicker{color:var(--muted);font-weight:600;margin-bottom:8px}
+    h1{font-size:clamp(32px,6vw,56px);line-height:1.1;margin:0 0 12px;font-weight:900;letter-spacing:.4px}
+    .subtitle{font-size:18px;color:var(--muted)}
+    .grid{display:grid;gap:16px;margin-top:28px}
+    .card{background:var(--card);border:1px solid rgba(0,0,0,.06);box-shadow:0 4px 16px var(--shadow);border-radius:14px;padding:18px}
+    @media (prefers-color-scheme: dark){ .card{border-color:rgba(255,255,255,.06)} }
+    .section-title{font-size:18px;font-weight:800;margin:4px 0 12px}
+    footer{padding:40px 0;color:var(--muted-2);font-size:14px}
+    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace}
+    .row{display:flex;gap:12px;flex-wrap:wrap}
+    .pill{padding:6px 10px;border:1px solid rgba(0,0,0,.08);border-radius:999px;background:var(--card)}
+    @media (prefers-color-scheme: dark){ .pill{border-color:rgba(255,255,255,.08)} }
   </style>
 </head>
 <body>
-  <!-- 顶部导航 -->
-  <header class="header">
+  <header>
     <div class="container nav">
-      <a class="brand" href="#home">变量道 · Variable Path</a>
-      <nav style="margin-left:auto">
-        <a href="#philosophy">理念</a>
-        <a href="#archive">档案</a>
-        <a href="#contact">联系</a>
-      </nav>
+      <div class="brand">变量道 · <span class="mono">Variable Path</span></div>
+      <div class="lang">
+        <span id="langLabel">Language</span>
+        <select id="langSwitch" aria-label="Language">
+          <option value="zh">🇨🇳 中文</option>
+          <option value="ja">🇯🇵 日本語</option>
+          <option value="ko">🇰🇷 한국어</option>
+          <option value="en">🇺🇸 English</option>
+        </select>
+      </div>
     </div>
   </header>
 
-  <!-- 首页 / Hero -->
-  <section id="home" class="hero">
-    <div class="container">
-      <h1>变量道 · Variable Path</h1>
-      <p class="lead">自由的本质，在于未被设定性。<br/>Freedom lives in the un-preset.</p>
-      <a class="btn" href="#philosophy">了解理念</a>
-    </div>
-  </section>
+  <main class="container">
+    <section class="hero">
+      <div class="kicker" id="t_kicker">Kicker</div>
+      <h1 id="t_title">Variable Path</h1>
+      <div class="subtitle" id="t_sub">The essence of freedom lies in being undefined.</div>
+      <div class="row" style="margin-top:18px">
+        <span class="pill" id="t_theme1">Clarity</span>
+        <span class="pill" id="t_theme2">Restraint</span>
+        <span class="pill" id="t_theme3">Human-centered</span>
+      </div>
+    </section>
 
-  <!-- 理念 -->
-  <section id="philosophy">
-    <div class="container">
-      <h2>理念 Philosophy</h2>
-      <p>我们关心“人如何在不被预设的路径里，活出选择”。变量道倡导对既定叙事保持温和的怀疑，对立场保持延迟，对世界保持长期的好奇。</p>
-      <p><em>We practice clarity without rigidity, curiosity without frenzy, and decisions with reversible steps.</em></p>
-      <p class="tag">宣言 v0.1</p>
-    </div>
-  </section>
+    <section class="grid">
+      <div class="card">
+        <div class="section-title" id="t_about_h">About</div>
+        <p id="t_about_p">We collect ideas, notes and projects that matter.</p>
+      </div>
 
-  <!-- 档案 / 种子库 -->
-  <section id="archive">
-    <div class="container">
-      <h2>档案 Archive · 思想种子</h2>
-      <ul class="list">
-        <li class="item">
-          <time>2025-01-01</time>
-          <div>
-            <strong>第一粒种子：未设定性</strong>
-            <div class="lead" style="margin:6px 0 0; font-size:15px;">当答案尚未到来，练习把问题提得更好。</div>
-          </div>
-        </li>
-        <li class="item">
-          <time>2025-01-xx</time>
-          <div>
-            <strong>留白的勇气</strong>
-            <div class="lead" style="margin:6px 0 0; font-size:15px;">把“马上定论”换成“再看一格”。</div>
-          </div>
-        </li>
-      </ul>
-    </div>
-  </section>
+      <div class="card">
+        <div class="section-title" id="t_manifesto_h">Manifesto</div>
+        <p id="t_manifesto_p1">Less, but better.</p>
+        <p id="t_manifesto_p2">We prize insight over noise, direction over speed.</p>
+      </div>
 
-  <!-- 联系 -->
-  <section id="contact">
-    <div class="container">
-      <h2>联系</h2>
-      <p>如需合作或交流，欢迎邮件：<a href="mailto:contact@notpreset.io">contact@notpreset.io</a>（可后续更换）。</p>
-    </div>
-  </section>
+      <div class="card">
+        <div class="section-title" id="t_projects_h">Projects</div>
+        <p id="t_projects_p">First seed in the ground. More to come.</p>
+      </div>
+    </section>
+  </main>
 
-  <footer class="foot">
-    <div class="container">© <span id="y"></span> 变量道 · Variable Path</div>
+  <footer>
+    <div class="container">
+      <div id="t_footer">© Variable Path. Built with focus and care.</div>
+    </div>
   </footer>
 
   <script>
-    // 页脚年份
-    document.getElementById('y').textContent = new Date().getFullYear();
+    // --- translations ---
+    const t = {
+      zh:{
+        langLabel:"语言",
+        kicker:"变量道",
+        title:"变量道 · Variable Path",
+        sub:"自由的本质，在于未被设定性。",
+        theme1:"清晰", theme2:"克制", theme3:"以人为本",
+        about_h:"关于", about_p:"我们收集重要的想法、札记与项目。",
+        manifesto_h:"宣言",
+        manifesto_p1:"少而精，且更好。",
+        manifesto_p2:"重洞见胜过噪音，重方向胜过速度。",
+        projects_h:"项目",
+        projects_p:"第一颗种子已种下，更多在路上。",
+        footer:"© 变量道 · 专注且克制地构建。"
+      },
+      ja:{
+        langLabel:"言語",
+        kicker:"変数道",
+        title:"変数道 · Variable Path",
+        sub:"自由の本質は、未設定にある。",
+        theme1:"明瞭さ", theme2:"節度", theme3:"人間中心",
+        about_h:"概要", about_p:"価値あるアイデア・ノート・プロジェクトを集約します。",
+        manifesto_h:"マニフェスト",
+        manifesto_p1:"少なく、しかし良く。",
+        manifesto_p2:"雑音より洞察を、速度より方向を。",
+        projects_h:"プロジェクト",
+        projects_p:"最初の種は蒔かれた。続きはこれから。",
+        footer:"© 変数道 · 集中して丁寧に作る。"
+      },
+      ko:{
+        langLabel:"언어",
+        kicker:"변수도",
+        title:"변수도 · Variable Path",
+        sub:"자유의 본질은 미설정에 있다.",
+        theme1:"명료함", theme2:"절제", theme3:"사람 중심",
+        about_h:"소개", about_p:"의미 있는 아이디어, 노트, 프로젝트를 모읍니다.",
+        manifesto_h:"선언",
+        manifesto_p1:"적지만 더 좋게.",
+        manifesto_p2:"소음보다 통찰, 속도보다 방향.",
+        projects_h:"프로젝트",
+        projects_p:"첫 씨앗을 심었습니다. 곧 더 많이.",
+        footer:"© 변수도 · 집중과 절제로 빚다."
+      },
+      en:{
+        langLabel:"Language",
+        kicker:"Variable Path",
+        title:"Variable Path",
+        sub:"The essence of freedom lies in being undefined.",
+        theme1:"Clarity", theme2:"Restraint", theme3:"Human-centered",
+        about_h:"About", about_p:"We collect ideas, notes and projects that matter.",
+        manifesto_h:"Manifesto",
+        manifesto_p1:"Less, but better.",
+        manifesto_p2:"We prize insight over noise, direction over speed.",
+        projects_h:"Projects",
+        projects_p:"First seed in the ground. More to come.",
+        footer:"© Variable Path. Built with focus and care."
+      }
+    };
+
+    // --- helpers ---
+    const mapLang = (raw) => {
+      if(!raw) return "en";
+      const l = raw.toLowerCase();
+      if(l.startsWith("zh")) return "zh";
+      if(l.startsWith("ja")) return "ja";
+      if(l.startsWith("ko")) return "ko";
+      return "en";
+    };
+    const getQueryLang = () => new URLSearchParams(location.search).get("lang");
+
+    function applyLang(code){
+      const dict = t[code] || t.en;
+      document.documentElement.lang = code;
+      const set = (id,key)=>{ const el=document.getElementById(id); if(el) el.textContent = dict[key]; };
+      set("langLabel","langLabel");
+      set("t_kicker","kicker");
+      set("t_title","title");
+      set("t_sub","sub");
+      set("t_theme1","theme1"); set("t_theme2","theme2"); set("t_theme3","theme3");
+      set("t_about_h","about_h"); set("t_about_p","about_p");
+      set("t_manifesto_h","manifesto_h"); set("t_manifesto_p1","manifesto_p1"); set("t_manifesto_p2","manifesto_p2");
+      set("t_projects_h","projects_h"); set("t_projects_p","projects_p");
+      set("t_footer","footer");
+      document.title = dict.title;
+      document.getElementById("langSwitch").value = code;
+    }
+
+    // --- init: query -> localStorage -> navigator ---
+    (function(){
+      const q = mapLang(getQueryLang());
+      const saved = localStorage.getItem("vp_lang");
+      const guess = mapLang(navigator.language || navigator.userLanguage);
+      const lang = getQueryLang() ? q : (saved || guess || "en");
+      applyLang(lang);
+      document.getElementById("langSwitch").addEventListener("change", e=>{
+        const v = e.target.value;
+        localStorage.setItem("vp_lang", v);
+        applyLang(v);
+      });
+    })();
   </script>
 </body>
 </html>
