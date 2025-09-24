@@ -1,415 +1,625 @@
+
 <!doctype html>
-<html lang="zh">
+<html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>变量道 · 心理自救 | Variable Dao</title>
-<meta name="color-scheme" content="light dark">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>变量道 · Variable Dao</title>
+<meta name="description" content="变量道 · 心理自救｜把现实当素材来书写。">
 <style>
-:root{
-  --bg:#ffffff; --fg:#151517; --muted:#6b7280; --brand:#151517; --accent:#0ea5e9;
-  --card:#f5f7fb; --shadow:0 8px 24px rgba(0,0,0,.08);
-}
-@media (prefers-color-scheme: dark){
-  :root{ --bg:#0c0d11; --fg:#eaeaf1; --muted:#9aa1ad; --brand:#eaeaf1; --card:#151720; --shadow:0 8px 24px rgba(0,0,0,.35);}
-}
-*{box-sizing:border-box}
-html,body{margin:0;padding:0;background:var(--bg);color:var(--fg);font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,"Helvetica Neue","PingFang SC","Noto Sans CJK SC","Hiragino Sans GB","Microsoft YaHei",sans-serif}
-a{color:inherit;text-decoration:none}
-.wrap{max-width:1080px;margin:0 auto;padding:0 16px}
-header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.65);backdrop-filter:saturate(160%) blur(10px);border-bottom:1px solid rgba(125,125,140,.15)}
-@media (prefers-color-scheme: dark){header{background:rgba(13,14,16,.55)}}
-.nav{height:56px;display:flex;align-items:center;gap:12px}
-.brand{font-weight:800;letter-spacing:.4px}
-.brand small{opacity:.65;font-weight:600}
-.spacer{flex:1}
-select, .btn{appearance:none;border:1px solid rgba(127,127,140,.25);background:transparent;color:var(--fg);padding:6px 10px;border-radius:10px;font-weight:600}
-.btn{cursor:pointer}
-.btn.primary{background:var(--fg);color:var(--bg);border-color:var(--fg)}
-main{padding:24px 0 64px}
-.hero{padding:36px 8px 24px;text-align:center}
-.hero h1{font-size:36px;line-height:1.2;margin:6px 0 10px}
-.hero p{color:var(--muted);margin:6px 0}
-.cta{margin-top:16px}
-.pen{display:inline-flex;align-items:center;gap:8px;padding:12px 18px;border-radius:999px;background:var(--fg);color:var(--bg);font-weight:800;border:none;cursor:pointer;box-shadow:var(--shadow)}
-.pen svg{width:18px;height:18px}
-.notice{font-size:13px;color:var(--muted);margin-top:6px}
-.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:10px}
-.card{background:var(--card);border:1px solid rgba(125,125,140,.15);border-radius:14px;padding:14px 16px;box-shadow:var(--shadow);cursor:pointer}
-.card h3{margin:0 0 8px 0;font-size:16px}
-.card p{margin:0;color:var(--muted);font-size:13px}
-.center-hint{display:flex;align-items:center;justify-content:center;height:96px;color:var(--muted);font-weight:700}
-.grid9{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:10px}
-.center-avatar{display:flex;align-items:center;justify-content:center}
-.avatar{width:92px;height:92px;border-radius:50%;border:2px dashed rgba(127,127,140,.35);display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--muted)}
-/* desktop layout when toggled */
-.desktop .cards{grid-template-columns:repeat(3,minmax(0,1fr))}
-.desktop .grid9{grid-template-columns:repeat(4,minmax(0,1fr))}
-footer{border-top:1px solid rgba(125,125,140,.15);padding:24px 0 48px;color:var(--muted);text-align:center}
-/* modal */
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.45);backdrop-filter:blur(3px);display:none;align-items:flex-start;overflow:auto;z-index:60}
-.modal.open{display:flex}
-.sheet{background:var(--bg);max-width:900px;margin:48px auto;padding:18px;border-radius:16px;box-shadow:var(--shadow)}
-.sheet .back{display:inline-flex;gap:6px;align-items:center;padding:6px 10px;border:1px solid rgba(127,127,140,.25);border-radius:10px;font-weight:700;cursor:pointer}
-.sheet h2{margin:8px 0 4px}
-.sheet h4{margin:10px 0 6px}
-.sheet .sep{margin:12px 0;border-top:1px dashed rgba(127,127,140,.3)}
-.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:28px;background:var(--fg);color:var(--bg);padding:10px 14px;border-radius:999px;font-size:14px;display:none;z-index:70}
-.toast.show{display:block}
-.hide{display:none!important}
-/* sections */
-section{display:none}
-section.active{display:block}
-/* about page */
-.kcards{display:flex;flex-direction:column;gap:12px;margin-top:10px}
-.kcard{background:var(--card);border:1px solid rgba(125,125,140,.15);border-radius:14px;padding:14px 16px;box-shadow:var(--shadow)}
-.kcard h3{margin:0 0 6px}
-.small{font-size:13px;color:var(--muted)}
+  :root{
+    --maxw:900px;
+    --pad:16px;
+    --radius:14px;
+    --muted:0.6;
+    --accent: #4b6bfb;
+  }
+  html,body{margin:0;padding:0}
+  body{
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", "PingFang SC","Hiragino Sans GB","Microsoft YaHei", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+    line-height:1.6;
+    -webkit-font-smoothing: antialiased;
+    color: #111;
+    background: #fff;
+  }
+  @media (prefers-color-scheme: dark){
+    body{ background:#0b0b0d; color:#eaeaf0;}
+    .card, .panel { background:#141418; color:#eaeaf0; border-color:#24242a;}
+    header, footer { background:#0b0b0d;}
+    .muted{ color:rgba(234,234,240,var(--muted));}
+    .btn{ color:#fff; }
+  }
+  a{ color:var(--accent); text-decoration:none}
+  header{
+    position:sticky; top:0; z-index:10;
+    backdrop-filter: saturate(150%) blur(8px);
+    background: rgba(255,255,255,0.7);
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+  }
+  @media (prefers-color-scheme: dark){
+    header{ background: rgba(11,11,13,0.6); border-bottom:1px solid rgba(255,255,255,0.08);}
+  }
+  .nav{
+    max-width:var(--maxw);
+    margin:0 auto;
+    padding: 10px var(--pad);
+    display:flex; align-items:center; gap:10px;
+  }
+  .nav .grow{ flex:1 }
+  .brand{ font-weight:700; letter-spacing:.2px}
+  .nav a, .nav button, .nav select{
+    font: inherit;
+    background:transparent; border:0;
+    color:inherit; cursor:pointer;
+  }
+  .chip{
+    padding:6px 10px; border:1px solid rgba(0,0,0,.08); border-radius:20px;
+  }
+  @media (prefers-color-scheme: dark){
+    .chip{ border-color: rgba(255,255,255,.12);}
+  }
+  .row{ display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+  .hero{
+    max-width:var(--maxw);
+    margin: 28px auto 16px;
+    padding: 0 var(--pad);
+  }
+  .h1{
+    font-size: clamp(28px, 4vw, 44px);
+    line-height:1.15;
+    font-weight:800;
+    letter-spacing:.3px;
+  }
+  .lead{ font-size: clamp(15px,2.4vw,18px); opacity:.9; }
+  .btn{
+    display:inline-flex; align-items:center; gap:10px;
+    padding:14px 18px; border-radius:14px;
+    border:1px solid rgba(0,0,0,.08);
+    background: linear-gradient(180deg,#fff,#f6f7fb);
+    box-shadow: 0 8px 20px rgba(0,0,0,.08);
+    font-weight:700;
+  }
+  .btn svg{ width:22px; height:22px }
+  @media (prefers-color-scheme: dark){
+    .btn{ background: linear-gradient(180deg,#1a1a1f,#121218); border-color:#24242a; box-shadow: 0 8px 28px rgba(0,0,0,.35);}
+  }
+
+  .panel{
+    max-width:var(--maxw);
+    margin: 8px auto 60px;
+    padding: 0 var(--pad);
+  }
+  .cards{
+    display:grid;
+    grid-template-columns: 1fr;
+    gap:14px;
+  }
+  .card{
+    background:#fff;
+    border:1px solid rgba(0,0,0,.08);
+    border-radius: var(--radius);
+    padding:14px 16px;
+  }
+  .card h3{ margin:6px 0 8px; font-size:18px}
+  .card .tag{ font-size:12px; opacity:.7}
+  .muted{ opacity:.7 }
+  .detail{
+    display:none;
+  }
+  .detail.active{ display:block }
+  .detail .back{
+    position:sticky; top:56px; z-index:9; margin-bottom:10px;
+  }
+  .back button{
+    padding:10px 12px; border-radius:12px; border:1px solid rgba(0,0,0,.08);
+  }
+  .section{ display:none }
+  .section.active{ display:block }
+  footer{
+    padding: 24px var(--pad) 60px;
+    border-top:1px solid rgba(0,0,0,.06);
+    margin-top:40px;
+  }
+  .footer-wrap{ max-width:var(--maxw); margin:0 auto }
+  .foot-note{ opacity:.7; font-size:13px}
+
+  /* Layout toggle (mobile vs desktop style) */
+  body.layout-desktop .cards{ grid-template-columns: repeat(2,1fr);}
+  body.layout-desktop .h1{ font-size:44px }
+  body.layout-desktop .panel, body.layout-desktop .hero{ max-width: 1100px }
+  /* compact long content paragraphs */
+  .long p{ margin: 8px 0 }
+  .note{ font-size: 13px; opacity:.7 }
+
+  /* simple toast */
+  #toast{ position:fixed; left:50%; bottom:18px; transform:translateX(-50%); background:rgba(20,20,30,.9); color:#fff; padding:8px 12px; border-radius:999px; font-size:13px; display:none }
 </style>
 </head>
 <body>
 <header>
-  <div class="wrap nav">
-    <div class="brand"><a href="#" id="homeLink">变量道 · <small>Variable Path</small></a></div>
-    <div class="spacer"></div>
-    <button class="btn" id="btnStories" data-i18n="stories">故事</button>
-    <button class="btn" id="btnAbout" data-i18n="about">关于我们</button>
-    <select id="layoutSel" title="Layout">
-      <option value="mobile">📱 手机</option>
-      <option value="desktop">🖥 桌面</option>
-    </select>
-    <select id="langSel" title="Language">
-      <option value="zh">中文</option>
-      <option value="en">English</option>
-      <option value="ja">日本語</option>
-      <option value="ko">한국어</option>
-    </select>
+  <div class="nav">
+    <div class="brand"><a href="#" id="nav-home">变量道 · Variable Dao</a></div>
+    <div class="grow"></div>
+    <a class="chip" href="#" id="nav-home-btn" data-i18n="nav.home">首页</a>
+    <a class="chip" href="#" id="nav-stories-btn" data-i18n="nav.stories">故事</a>
+    <a class="chip" href="#" id="nav-about-btn" data-i18n="nav.about">关于我们</a>
+    <div class="row">
+      <select id="layoutSelect" class="chip" title="Layout">
+        <option value="mobile">📱 Mobile</option>
+        <option value="desktop">🖥️ Desktop</option>
+      </select>
+      <select id="langSelect" class="chip" title="Language">
+        <option value="en">EN</option>
+        <option value="zh">中文</option>
+        <option value="ja">日本語</option>
+        <option value="ko">한국어</option>
+      </select>
+    </div>
   </div>
 </header>
 
-<main class="wrap">
-  <!-- HOME - step 1 -->
-  <section id="home" class="active">
-    <div class="hero">
-      <h1 data-i18n="heroTitle">变量道 · 心理自救</h1>
-      <p data-i18n="heroL1">他们给你故事，你只被分配到角色。</p>
-      <p data-i18n="heroL2">我们给你笔。</p>
-      <p data-i18n="heroL3">思维进化，不逃避不妄想——把现实当素材来书写。</p>
-      <p data-i18n="heroL4">从此，故事听你的。</p>
-      <div class="cta">
-        <button class="pen" id="startBtn">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-          <span data-i18n="start">我来执笔</span>
-        </button>
-        <div class="notice" data-i18n="notice">点击后进入十张“复仇性钩子卡”。</div>
-      </div>
-    </div>
-    <div class="center-hint"><span>— 首页 —</span></div>
-  </section>
+<!-- HOME HERO (Step 1) -->
+<section id="home-hero" class="section active">
+  <div class="hero">
+    <div class="h1" data-i18n="hero.title">变量道 · 心理自救</div>
+    <p class="lead" data-i18n="hero.subtitle1">他们给你故事，你只被分配到角色。我们给你笔。</p>
+    <p class="lead" data-i18n="hero.subtitle2">思维进化，不逃避不妄想——把现实当素材来书写。从此，故事听你的。</p>
+    <div style="height:14px"></div>
+    <button id="startBtn" class="btn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <path d="M12 19l7-7 3 3-7 7-3-1z" stroke-width="1.5"/>
+        <path d="M3 21l6-2 11-11-4-4L5 15 3 21z" stroke-width="1.5"/>
+      </svg>
+      <span data-i18n="hero.cta">我来执笔</span>
+    </button>
+    <div class="note" style="margin-top:10px" data-i18n="hero.note">点击上面的“笔”按钮进入下一步。可随时用顶部导航返回。</div>
+  </div>
+</section>
 
-  <!-- HOME - step 2 (cards grid) -->
-  <section id="grid">
-    <div class="center-avatar"><div class="avatar">打坐</div></div>
-    <div class="center-hint" data-i18n="gridHint">看到哪条让你想爆粗口，就点它。</div>
-    <div class="grid9" id="cardGrid"></div>
-  </section>
-
-  <!-- ABOUT -->
-  <section id="about">
-    <h2>关于我们</h2>
-    <div class="kcards">
-      <div class="kcard">
-        <h3>我们的立场</h3>
-        <p>变量道是一套基于“讲故事”的心理自救修行法：你会重新获得叙事感、掌控感、连接感。</p>
-        <ul>
-          <li>我们反对空洞的幻觉，却允许你用叙事让现实变得可以忍受。</li>
-          <li>我们不保证奇迹，但我们保证：你不会再是“别人写的角色”，你会学会拿笔。</li>
-        </ul>
-        <p>变量道不是心理学的再包装，也不是鸡汤。它是一种修行方式：在世界是故事的前提下，学会自己执笔。</p>
-        <ul>
-          <li>世界每天把你分配到角色：透明人、候补者、背景板、棋子。</li>
-          <li>我们的目标，是让你能当场识别：这是别人写的剧本；然后，哪怕只改一笔，也能把剧本写回自己手里。</li>
-        </ul>
-        <p><b>怎么开始（马上可试的实验）</b></p>
-        <ol>
-          <li>刺句拆解：在刺痛句后加上“这是他们写的，不是我写的”。</li>
-          <li>舞台动作：心里给自己报幕，“他抬脚——全场安静。”</li>
-          <li>逆写标签：“透明人=见证人”。</li>
-          <li>一分钟写故事：写一句“今天我在____做了____”，让自己成为作者。</li>
-        </ol>
-      </div>
-      <div class="kcard">
-        <h3>发起人 · 隐墨子</h3>
-        <p><b>道号</b>：隐墨子</p>
-        <p>隐墨子，曾长期在制度与资源的核心附近工作，见过叙事如何被商品化、操纵乃至武器化。他选择隐匿，不为逃责，而为护法：把个人面孔从方法前移走，让可复制的练习先站稳，再传播。</p>
-        <p><b>动机</b>：把“被精英圈子掌控的智识”转成人人可操作的技巧，不贩售神秘，只交付可验证的练习。</p>
-      </div>
-      <div class="kcard">
-        <h3>发起人 · 青隐客</h3>
-        <p><b>道号</b>：青隐客</p>
-        <p>青隐客自述“市井一粒尘”。遇见变量道后，他把平凡写成章节，获得强烈的轻快与幸福。他愿意把这支笔传给更多人：不建庙宇，不设神像，只把笔递给凡人。</p>
-      </div>
-      <div class="kcard small">
-        <h3>声明：我们的承诺与界线</h3>
-        <ul>
-          <li>我们不保证奇迹。我们承诺提供可验证的故事训练、范例与社区实验。</li>
-          <li>我们反对操控与剥削。任何要求你断绝外部联系、将所有决策交给某人或要求高额“献金”的组织，都不是我们的盟友。</li>
-          <li>若你处于精神危机，请先求医。本体系不是医疗替代。若有自伤/自杀念头，请立即联系专业机构或危机热线。</li>
-        </ul>
-        <p>联系我们：<a href="mailto:notpreset@outlook.com">notpreset@outlook.com</a></p>
-      </div>
+<!-- HOME CARDS (Step 2) -->
+<section id="home-cards" class="section">
+  <div class="panel">
+    <div class="h1" data-i18n="cards.title">看到哪条让你想爆粗口，就点它。</div>
+    <div class="cards" id="cardsList">
+      <!-- Card items are injected by JS from content data -->
     </div>
-  </section>
-</main>
+  </div>
+  <!-- Detail view -->
+  <div class="panel detail" id="detailView">
+    <div class="back"><button id="backToCards">🔙 <span data-i18n="cards.back">返回选卡</span></button></div>
+    <div id="detailContent" class="card long"></div>
+  </div>
+</section>
+
+<!-- STORIES -->
+<section id="stories" class="section">
+  <div class="panel">
+    <div class="card">
+      <h3 data-i18n="stories.title">故事</h3>
+      <p data-i18n="stories.wip">内容正在搭建中，敬请期待。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about" class="section">
+  <div class="panel">
+    <div class="cards" id="aboutCards"></div>
+  </div>
+  <div class="panel">
+    <div class="card">
+      <h4 data-i18n="about.statement.title">声明：我们的承诺与界线</h4>
+      <ul class="long">
+        <li data-i18n="about.statement.li1">我们不保证奇迹。我们承诺提供可验证的故事训练、范例与社区实验。</li>
+        <li data-i18n="about.statement.li2">我们反对操控与剥削。任何要求你断绝外部联系、将所有决策交给某人或要求高额“献金”的组织，不是我们的盟友。</li>
+        <li data-i18n="about.statement.li3">若你处于精神危机，请先求医。本体系不是医疗替代。若有自伤/自杀念头，请立即联系专业机构或危机热线。</li>
+      </ul>
+      <p class="muted">Email: <a href="mailto:notpreset@outlook.com">notpreset@outlook.com</a></p>
+    </div>
+  </div>
+</section>
 
 <footer>
-  <div class="wrap">© 变量道 — 自救，从看见自己开始。</div>
+  <div class="footer-wrap">
+    <div class="muted foot-note" data-i18n="footer.copy">© 2025 变量道 · 让世界成为可书写的素材。</div>
+  </div>
 </footer>
 
-<div class="toast" id="toast">内容正在搭建中，敬请期待</div>
-
-<!-- Modal for card details -->
-<div class="modal" id="modal">
-  <div class="sheet">
-    <button class="back" id="backBtn">← 返回</button>
-    <div id="sheetBody"></div>
-  </div>
-</div>
-
-<!-- Templates of 10 cards -->
-<template id="tpl-list">
-  [
-    {"id":"c1","title":"当空气","stab":"我在，你们当没看见。","ask":"谁把我当透明人？"},
-    {"id":"c2","title":"不是唯一","stab":"永远候补，从没被偏爱。","ask":"在哪段关系里，我可替代到可笑？"},
-    {"id":"c3","title":"石沉大海","stab":"说破喉咙，也没人回。","ask":"我最近一次被已读不回是什么？"},
-    {"id":"c4","title":"活成背景","stab":"我的人生像别人的配角。","ask":"我在过谁写的故事？"},
-    {"id":"c5","title":"被人摆布","stab":"我做的一切都像被操控。","ask":"到底是谁在替我做决定？"},
-    {"id":"c6","title":"多余之人","stab":"工作没人需要我，回家也一样。","ask":"我在哪件事上被当可有可无？"},
-    {"id":"c7","title":"无家可归","stab":"他们有圈子，我只有门外。","ask":"我本该属于那里，却一直在门口？"},
-    {"id":"c8","title":"走进虚无","stab":"越努力越迷茫。","ask":"我现在到底在向哪里推进？"},
-    {"id":"c9","title":"日子没光","stab":"每天都像复印，毫无仪式。","ask":"今天有什么值得让我停一下？"},
-    {"id":"c10","title":"只是一粒尘","stab":"世界滚滚向前，没我也一样。","ask":"我和更大的东西还有连接吗？"}
-  ]
-</template>
-
-<!-- Detail templates (sheet content) -->
-<template id="c1">
-  <h2>当空气</h2>
-  <h4>短篇｜《两个人影》</h4>
-  <p>同一间教室里，有两个人影：A 和 B。老师点名老漏、分组没人喊、举手没人看——他们都像空气。</p>
-  <p><b>A 的故事</b>：他更安静、更用功，盼着“总有一天会被看到”。一个月后，他开始怀疑自己是不是真的不重要。灯永远不会主动打到他身上。</p>
-  <p><b>B 的故事</b>：他先让世界听到一声响——广播体操故意慢半拍、把球赛剪成“假正经解说”在下课放映。同学开始叫他“解说员”。他从空气，变成可被叫到的人。</p>
-  <div class="sep"></div>
-  <h4>变量道 · 道骨</h4>
-  <ul>
-    <li>🦴 确认感（I exist for someone）</li>
-    <li>人不只是“我存在”，而是“我的存在被看见”。</li>
-    <li>被爱、被骂都行，人最怕是彻底的无视。</li>
-  </ul>
-  <h4>变量道 · 道证</h4>
-  <ul>
-    <li>A：等别人给角色。</li>
-    <li>B：先丢一个响亮的记号。</li>
-    <li>两种都对——选那个更有生命力的“对”。</li>
-  </ul>
-</template>
-
-<template id="c2">
-  <h2>不是唯一</h2>
-  <h4>A. 案例｜《哈洛小猴子实验》</h4>
-  <p>铁丝奶与布偶抱，小猴子多选“被偏爱”的温度。现实里，“一视同仁”常变成“人人可替代”。</p>
-  <h4>B. 短篇｜《小舟的生日》</h4>
-  <p>合并生日时，他在蛋糕边写下“祝小舟生日快乐”。从此家人都会等他写“专属一笔”。</p>
-  <div class="sep"></div>
-  <h4>变量道 · 道骨</h4>
-  <ul>
-    <li>🦴 偏心感（I matter more than average）</li>
-    <li>人渴望在某个关系里是独一份的；长期“平等”会让人觉得可替代。</li>
-  </ul>
-</template>
-
-<template id="c3">
-  <h2>石沉大海</h2>
-  <h4>A. 现实案例｜《被已读不回的母亲》</h4>
-  <p>群里“已读”却无人回——责任分散效应。</p>
-  <h4>B. 变量道人物｜《阿昊的三秒钟》</h4>
-  <p>他宣布“3 秒后我就自行决策：3…2…1…”，沉默被倒计时击破，同事反而养成“等阿昊三秒”的习惯。</p>
-  <div class="sep"></div>
-  <h4>变量道 · 道骨</h4>
-  <ul>
-    <li>🦴 回声感（I get an echo）</li>
-    <li>沉默能杀死联系，比争吵更快；造一个必须响的时刻。</li>
-  </ul>
-</template>
-
-<template id="c4">
-  <h2>活成背景</h2>
-  <h4>A. 现实案例｜《婚礼上的伴娘》</h4>
-  <p>聚光灯只在新娘，伴娘像装饰。</p>
-  <h4>B. 变量道人物｜《见证者的主角》</h4>
-  <p>她写：“我见证朋友走进她的主角时刻。”留言区被她的视角点亮，她把“陪衬”改写为“见证的主角”。</p>
-  <div class="sep"></div>
-  <h4>变量道 · 道骨</h4>
-  <ul>
-    <li>🦴 叙事感（My life is a story）</li>
-    <li>把“我是背景”写进故事，虚无就会改写成章节。</li>
-  </ul>
-</template>
-
-<template id="c5">
-  <h2>被人摆布</h2>
-  <h4>A. 现实案例｜《被剥夺的志愿》</h4>
-  <p>志愿被改、治疗被强推，人生像棋盘上的棋子。</p>
-  <h4>B. 变量道人物｜《写回自己的镜头》</h4>
-  <p>她把一切当作“导演取景”，在病历备注写下“这是我在为作品取材”。掌控感=在被摆布的剧本里插入一帧属于自己的镜头。</p>
-  <div class="sep"></div>
-  <h4>变量道 · 道骨</h4>
-  <ul>
-    <li>🦴 掌控感（I can influence outcomes）</li>
-    <li>不必翻盘，但要留下“这是我”的清晰标记。</li>
-  </ul>
-</template>
-
-<template id="c6">
-  <h2>多余之人</h2>
-  <h4>短篇｜《炉火旁的身影》</h4>
-  <p>A：掌火少年混过十年，终被逐出山门，悔恨而终。B：研火候成“火候师”，从角落点亮自己的价值。</p>
-  <div class="sep"></div>
-  <h4>变量道 · 道骨</h4>
-  <ul>
-    <li>🔥 价值感（I am useful / valuable）</li>
-    <li>在最平凡处刻下只有你能留下的痕迹。</li>
-  </ul>
-</template>
-
-<template id="c7">
-  <h2>无家可归</h2>
-  <h4>短篇｜《逐徒》</h4>
-  <p>A：被逐出门派，终老荒冢。B：收留“无门之人”，共守渡口，营火成“门”。</p>
-  <div class="sep"></div>
-  <h4>变量道 · 道骨</h4>
-  <ul>
-    <li>🤝 归属感（I am part of a tribe）</li>
-    <li>孤立久了会疯；也可以“创”——把营火写成门。</li>
-  </ul>
-</template>
-
-<template id="c8">
-  <h2>走进虚无</h2>
-  <h4>短篇｜《遗迹》</h4>
-  <p>A：千年挖掘见“虚无”，队长崩溃。B：在“虚无”下刻“我们在此存在”，把空白写成方向，后世称那一刀为“第二笔”。</p>
-  <div class="sep"></div>
-  <h4>变量道 · 道骨</h4>
-  <ul>
-    <li>🛰️ 方向感（I am going somewhere）</li>
-    <li>终点若是空白，就把它改写成序章。</li>
-  </ul>
-</template>
-
-<template id="c9">
-  <h2>日子没光</h2>
-  <h4>短篇｜《尼罗河之夜》</h4>
-  <p>A：神迹成背景，生命麻木如复印。B：年年点灯献谷，让水不只成水，而是故事与敬畏。</p>
-  <div class="sep"></div>
-  <h4>变量道 · 道骨</h4>
-  <ul>
-    <li>✨ 仪式感（This moment is sacred）</li>
-    <li>光不会自来，要靠人点燃。</li>
-  </ul>
-</template>
-
-<template id="c10">
-  <h2>只是一粒尘</h2>
-  <h4>系统风短篇｜《无敌之后》</h4>
-  <p>A：独自开挂，最后只剩冷冰冰的提示音与空虚。B：把战斗写成“守护”，系统提示“建立连接：你的故事，被他人记住”。</p>
-  <div class="sep"></div>
-  <h4>变量道 · 道骨</h4>
-  <ul>
-    <li>🌌 超越感（I touch something greater）</li>
-    <li>把自己写进更大的故事里，才不再是孤立的沙子。</li>
-  </ul>
-</template>
+<div id="toast"></div>
 
 <script>
-// --- tiny util ---
-const $ = (sel, p=document) => p.querySelector(sel);
-const $$ = (sel, p=document) => [...p.querySelectorAll(sel)];
-const qs = new URLSearchParams(location.search);
-const store = (k,v)=>localStorage.setItem(k,v);
-const fetchStore = (k,d)=>localStorage.getItem(k)||d;
+/* ========= i18n ========= */
+const I18N = {
+  en: {
+    "nav.home":"Home",
+    "nav.stories":"Stories",
+    "nav.about":"About",
+    "hero.title":"Variable Dao · Self‑Rescue by Story",
+    "hero.subtitle1":"They hand you a story and assign you a role. We hand you the pen.",
+    "hero.subtitle2":"Evolve your thinking—no escapism, no delusion. Write with reality as your material. From now on, the story listens to you.",
+    "hero.cta":"Take the Pen",
+    "hero.note":"Click the pen to continue. Use the top nav anytime.",
+    "cards.title":"Tap the line that makes you want to swear.",
+    "cards.back":"Back to cards",
+    "stories.title":"Stories",
+    "stories.wip":"This section is under construction. Please stay tuned.",
+    "about.statement.title":"Statement: Our Commitments & Boundaries",
+    "about.statement.li1":"We do not promise miracles. We promise verifiable drills, exemplars, and community experiments.",
+    "about.statement.li2":"We oppose manipulation and exploitation. Any group that isolates you, centralizes all decisions, or demands heavy 'donations' is not our ally.",
+    "about.statement.li3":"If you are in crisis, seek medical help first. This is not a substitute for treatment. If you have self‑harm or suicidal thoughts, contact professional help immediately.",
+    "footer.copy":"© 2025 Variable Dao · Make the world writable."
+  },
+  zh: {
+    "nav.home":"首页",
+    "nav.stories":"故事",
+    "nav.about":"关于我们",
+    "hero.title":"变量道 · 心理自救",
+    "hero.subtitle1":"他们给你故事，你只被分配到角色。我们给你笔。",
+    "hero.subtitle2":"思维进化，不逃避不妄想——把现实当素材来书写。从此，故事听你的。",
+    "hero.cta":"我来执笔",
+    "hero.note":"点击上面的“笔”按钮进入下一步。可随时用顶部导航返回。",
+    "cards.title":"看到哪条让你想爆粗口，就点它。",
+    "cards.back":"返回选卡",
+    "stories.title":"故事",
+    "stories.wip":"内容正在搭建中，敬请期待。",
+    "about.statement.title":"声明：我们的承诺与界线",
+    "about.statement.li1":"我们不保证奇迹。我们承诺提供可验证的故事训练、范例与社区实验。",
+    "about.statement.li2":"我们反对操控与剥削。任何要求你断绝外部联系、将所有决策交给某人或要求高额“献金”的组织，不是我们的盟友。",
+    "about.statement.li3":"若你处于精神危机，请先求医。本体系不是医疗替代。若有自伤/自杀念头，请立即联系专业机构或危机热线。",
+    "footer.copy":"© 2025 变量道 · 让世界成为可书写的素材。"
+  },
+  ja: {
+    "nav.home":"ホーム",
+    "nav.stories":"ストーリー",
+    "nav.about":"私たちについて",
+    "hero.title":"変数道 · 物語で自らを救う",
+    "hero.subtitle1":"世界はあなたに役を割り振る。私たちは“ペン”を渡す。",
+    "hero.subtitle2":"逃避も妄想もせず、現実を素材に書く。これからは、物語はあなたに従う。",
+    "hero.cta":"ペンを取る",
+    "hero.note":"上のボタンをタップして進む。上部ナビでいつでも戻れます。",
+    "cards.title":"胸に刺さるものをタップ。",
+    "cards.back":"カードへ戻る",
+    "stories.title":"ストーリー",
+    "stories.wip":"準備中。しばらくお待ちください。",
+    "about.statement.title":"声明：私たちの約束と境界",
+    "about.statement.li1":"奇跡は約束しません。検証可能な練習・実例・実験を提供します。",
+    "about.statement.li2":"操作と搾取に反対します。隔離や高額“献金”を迫る団体は同盟ではありません。",
+    "about.statement.li3":"精神的危機の際は医療機関へ。本体系は治療の代替ではありません。",
+    "footer.copy":"© 2025 変数道 · 世界を“書ける”ものに。"
+  },
+  ko: {
+    "nav.home":"홈",
+    "nav.stories":"스토리",
+    "nav.about":"소개",
+    "hero.title":"변수도 · 이야기로 스스로를 구하기",
+    "hero.subtitle1":"세상은 역할을 배정한다. 우리는 ‘펜’을 건넨다.",
+    "hero.subtitle2":"도피도 망상도 없이, 현실로 쓰라. 이제부터 이야기는 당신의 것이다.",
+    "hero.cta":"펜을 들기",
+    "hero.note":"위 버튼을 눌러 다음으로. 상단 메뉴로 언제든 돌아갈 수 있습니다.",
+    "cards.title":"욕이 튀어나올 그 문장을 탭하세요.",
+    "cards.back":"카드로 돌아가기",
+    "stories.title":"스토리",
+    "stories.wip":"준비 중입니다.",
+    "about.statement.title":"성명: 우리의 약속과 경계",
+    "about.statement.li1":"기적을 약속하지 않습니다. 검증 가능한 훈련·사례·실험을 제공합니다.",
+    "about.statement.li2":"조작과 착취에 반대합니다. 고립을 강요하거나 거액의 ‘헌금’을 요구하는 조직은 동맹이 아닙니다.",
+    "about.statement.li3":"위기 시에는 먼저 의료기관에 연락하세요. 본 체계는 치료의 대체가 아닙니다.",
+    "footer.copy":"© 2025 변수도 · 세상을 ‘쓸 수 있게’."
+  }
+};
 
-// --- nav actions ---
-const toast = (msg)=>{ const t=$("#toast"); t.textContent=msg; t.classList.add("show"); setTimeout(()=>t.classList.remove("show"),1600); };
-
-$("#btnStories").onclick = ()=> toast(ui.str("building"));
-$("#btnAbout").onclick = ()=> showSection("about");
-$("#homeLink").onclick = (e)=>{ e.preventDefault(); showSection("home"); };
-
-// layout toggle
-const root = document.documentElement;
-const layoutSel = $("#layoutSel");
-layoutSel.value = fetchStore("layout","mobile");
-if(layoutSel.value==="desktop") root.classList.add("desktop");
-layoutSel.onchange = e=>{ const v=e.target.value; store("layout",v); root.classList.toggle("desktop", v==="desktop"); };
-
-// --- language (UI labels only; content主要中文) ---
-const ui = (function(){
-  const dict = {
-    zh:{stories:"故事",about:"关于我们",start:"我来执笔",notice:"点击后进入十张“复仇性钩子卡”。",gridHint:"看到哪条让你想爆粗口，就点它。",heroTitle:"变量道 · 心理自救",heroL1:"他们给你故事，你只被分配到角色。",heroL2:"我们给你笔。",heroL3:"思维进化，不逃避不妄想——把现实当素材来书写。",heroL4:"从此，故事听你的。",building:"内容正在搭建中，敬请期待"},
-    en:{stories:"Stories",about:"About",start:"I’ll write",notice:"Tap to enter 10 hook cards.",gridHint:"Tap the one that makes you want to swear.",heroTitle:"Variable Dao · Self‑Rescue",heroL1:"They hand you a story and assign you a role.",heroL2:"We hand you the pen.",heroL3:"Think clearly and write reality as material.",heroL4:"From now on, the story listens to you.",building:"Building… Coming soon"},
-    ja:{stories:"物語",about:"私たちについて",start:"筆を取る",notice:"10枚のフックカードへ。",gridHint:"思わず悪態をつきたくなるものを選べ。",heroTitle:"可変道・セルフレスキュー",heroL1:"他人の物語で役だけ与えられる。",heroL2:"私たちは筆を渡す。",heroL3:"現実を素材に書け。",heroL4:"これからは物語があなたに従う。",building:"準備中…"},
-    ko:{stories:"이야기",about:"소개",start:"내가 쓴다",notice:"10개의 훅카드로 이동.",gridHint:"욕이 나오는 걸 고르세요.",heroTitle:"변량도 · 자기구원",heroL1:"그들은 이야기를 주고 너에겐 역할만 준다.",heroL2:"우리는 펜을 준다.",heroL3:"현실을 재료로 써라.",heroL4:"이제부터 이야기는 너를 따른다.",building:"준비 중…"}
-  };
-  let lang = qs.get("lang") || fetchStore("lang","") || (navigator.language||"zh").slice(0,2);
-  if(!dict[lang]) lang="en";
-  $("#langSel").value = lang;
-  const apply = ()=>{$$("[data-i18n]").forEach(el=>{ const k=el.getAttribute("data-i18n"); el.textContent = dict[lang][k]||el.textContent; });};
-  const set = v=>{ lang=v; store("lang",lang); apply(); };
-  const str = k=>dict[lang][k]||k;
-  apply();
-  return {set,str};
-})();
-$("#langSel").onchange = e => ui.set(e.target.value);
-
-// --- sections ---
-function showSection(id){
-  $$("main section").forEach(s=>s.classList.remove("active"));
-  $("#"+id).classList.add("active");
-  if(id==="grid" && !$("#cardGrid").dataset.inited) initGrid();
-  scrollTo(0,0);
+function t(key){
+  const lang = state.lang;
+  const dict = I18N[lang] || I18N['en'];
+  return dict[key] || (I18N['zh'][key] || key);
 }
 
-// step 1 -> step 2
-$("#startBtn").onclick = ()=> showSection("grid");
+/* ========= Content (ZH source; UI translated; content可后续补充多语) ========= */
+const CARDS = [
+  {
+    key:"air",
+    title:"当空气",
+    sting:"我在，你们当没看见。",
+    ask:"谁把我当透明人？",
+    body:`<p><b>短篇｜《两个人影》</b></p>
+<p>同一间教室里，有两个人影：A 和 B。老师点名老漏、分组没人喊、举手没人看——他们都像空气。黑板擦过一遍又一遍，他们的名字一次也没留下。</p>
+<p>A 的故事这样写：<br>
+“乖一点，不添麻烦；用成绩说话；总有一天会被看到。”<br>
+于是他更安静，坐得更直。一个月后，他开始怀疑：是不是我真的不重要。他没错——安静、礼貌、克制都对；但他的生命像被按了静音键，灯永远不会主动打到他身上。</p>
+<p>B 的故事是另一个版本：<br>
+“既然没人看见，那我先让世界听到一声响。”<br>
+做广播体操时，他故意慢半拍或夸张地做错动作，引得旁边的同学笑场；他会去广播站把班级球赛剪了段“假正经解说”在下课时用教学设备放映，年级主任皱眉：“别闹。”但全班开始叫他“解说员”。</p>
+<p><b>变量道 · 道骨</b><br>🦴确认感（I exist for someone）</p>
+<p><b>变量道 · 道证</b><br>• A 等角色；• B 丢下记号。</p>
+<p><b>变量道 · 觉悟</b><br>被看见，是人类的底层燃料。从“空气”到“被叫到名字”，新的故事就开始了。</p>`
+  },
+  {
+    key:"not-only",
+    title:"不是唯一",
+    sting:"永远候补，从没被偏爱。",
+    ask:"在哪段关系里，我可替代到可笑？",
+    body:`<p><b>A.案例｜《哈洛小猴子实验》</b></p>
+<p>……（略述实验与“独一感”）</p>
+<p><b>B.短篇｜《小舟的生日》</b></p>
+<p>……（写下“专属一笔”）</p>
+<p><b>变量道 · 道骨</b><br>🦴 偏心感（I matter more than average）</p>
+<p><b>变量道 · 道证</b> • 接受“平等”与在平等里刻线。</p>
+<p><b>变量道 · 觉悟</b><br>公平是安全带，偏心是燃料。若别人不给唯一，就自己刻一个。</p>`
+  },
+  {
+    key:"no-reply",
+    title:"石沉大海",
+    sting:"说破喉咙，也没人回。",
+    ask:"我最近一次“被已读不回”是什么事？",
+    body:`<p><b>A.现实案例｜《被已读不回的母亲》</b></p>
+<p>……责任分散效应……</p>
+<p><b>B.变量道人物｜《阿昊的三秒钟》</b></p>
+<p>……把沉默变成倒计时舞台……</p>
+<p><b>变量道 · 道骨</b><br>🦴 回声感（I get an echo）</p>
+<p><b>变量道 · 道证</b> • 等 vs 造场。</p>
+<p><b>变量道 · 觉悟</b><br>回声不是天赐，而是你给世界一个“必须响的时刻”。</p>`
+  },
+  {
+    key:"background",
+    title:"活成背景",
+    sting:"我的人生像别人的配角。",
+    ask:"我在过谁写的故事？",
+    body:`<p><b>A.现实案例｜《婚礼上的伴娘》</b></p>
+<p>……没有一个字提到自己……</p>
+<p><b>B.变量道人物｜《见证者的主角》</b></p>
+<p>……“见证也是主角”……</p>
+<p><b>变量道 · 道骨</b><br>🦴 叙事感（My life is a story）</p>
+<p><b>变量道 · 道证</b> • 配角位置的转化。</p>
+<p><b>变量道 · 觉悟</b><br>写自己的叙事，虚无被改写成章节。</p>`
+  },
+  {
+    key:"puppet",
+    title:"被人摆布",
+    sting:"我做的一切都像被操控。",
+    ask:"到底是谁在替我做决定？",
+    body:`<p><b>A.现实案例｜《被剥夺的志愿》</b></p>
+<p>……“师范稳定”与无发言权……</p>
+<p><b>B.变量道人物｜《写回自己的镜头》</b></p>
+<p>……用导演思维反击，病历备注“为作品取材”。</p>
+<p><b>变量道 · 道骨</b><br>🦴 掌控感（I can influence outcomes）</p>
+<p><b>变量道 · 道证</b> • 全局未变，插入署名。</p>
+<p><b>变量道 · 觉悟</b><br>在剧本里插入你的一帧，证明“我写过”。</p>`
+  },
+  {
+    key:"redundant",
+    title:"多余之人",
+    sting:"工作没人需要我，回家也一样。",
+    ask:"我在哪件事上最被当“可有可无”？",
+    body:`<p><b>短篇｜《炉火旁的身影》</b></p>
+<p>……“火候师”的逆袭……</p>
+<p><b>变量道 · 道骨</b><br>🔥 价值感（I am useful / valuable）</p>
+<p><b>变量道 · 道证</b> • 角落里点亮你的光。</p>
+<p><b>变量道 · 觉悟</b><br>火因你而稳，炉因你而成——存在的证明。</p>`
+  },
+  {
+    key:"no-tribe",
+    title:"无家可归",
+    sting:"他们有圈子，我只有门外。",
+    ask:"我本该属于那里，却一直在门口？",
+    body:`<p><b>短篇｜《逐徒》</b></p>
+<p>……“我们是彼此的靠山”。</p>
+<p><b>变量道 · 道骨</b><br>🤝 归属感（I am part of a tribe）</p>
+<p><b>变量道 · 道证</b> • 孤立久了，疯；孤立久了，创。</p>
+<p><b>变量道 · 觉悟</b><br>为“家”立下故事，篝火即门。</p>`
+  },
+  {
+    key:"void",
+    title:"走进虚无",
+    sting:"越努力越迷茫。",
+    ask:"我现在到底在向哪里推进？",
+    body:`<p><b>短篇｜《遗迹》</b></p>
+<p>……石碑“虚无”，刻下“我们在此存在”。</p>
+<p><b>变量道 · 道骨</b><br>🛰️ 方向感（I am going somewhere）</p>
+<p><b>变量道 · 道证</b> • 终点改写成序章。</p>
+<p><b>变量道 · 觉悟</b><br>方向不是外面给的。</p>`
+  },
+  {
+    key:"no-light",
+    title:"日子没光",
+    sting:"每天都像复印，毫无仪式。",
+    ask:"今天有什么值得让我停一下？",
+    body:`<p><b>短篇｜《尼罗河之夜》</b></p>
+<p>……点灯、献谷，给日常以敬意……</p>
+<p><b>变量道 · 道骨</b><br>✨ 仪式感（This moment is sacred）</p>
+<p><b>变量道 · 道证</b> • 选择的点亮。</p>
+<p><b>变量道 · 觉悟</b><br>光要人点燃。</p>`
+  },
+  {
+    key:"dust",
+    title:"只是一粒尘",
+    sting:"世界滚滚向前，没我也一样。",
+    ask:"我和更大的东西还有连接吗？",
+    body:`<p><b>系统文｜《无敌之后》</b></p>
+<p>……从“为胜负”到“为守护”。</p>
+<p><b>变量道 · 道骨</b><br>🌌 超越感（I touch something greater）</p>
+<p><b>变量道 · 道证</b> • 把力量写进群体的故事。</p>
+<p><b>变量道 · 觉悟</b><br>系统会过期，故事会流传。</p>`
+  }
+];
 
-// --- cards grid init ---
-function initGrid(){
-  const data = JSON.parse($("#tpl-list").innerHTML);
-  const grid = $("#cardGrid");
-  data.forEach((c,i)=>{
-    const d = document.createElement("div");
-    d.className="card";
-    d.innerHTML = `<h3>${i+1}. ${c.title}</h3><p>${c.stab}</p><p class="small">${c.ask}</p>`;
-    d.onclick = ()=> openCard(c.id);
-    grid.appendChild(d);
+/* ABOUT cards content (condensed per user's outline) */
+const ABOUT = [
+  {
+    title:"我们的立场",
+    body:`<p>变量道是一套基于“讲故事”的心理自救修行法：你会重新获得叙事感、掌控感、连接感。</p>
+    <ul class="long">
+      <li>我们反对空洞的幻觉，却允许你用叙事让现实变得可以忍受。</li>
+      <li>我们不保证奇迹，但我们保证：你不会再是“别人写的角色”，你会学会拿笔。</li>
+    </ul>
+    <p>变量道不是心理学的再包装，也不是鸡汤。它是一种修行方式：在世界是故事的前提下，学会自己执笔。</p>`
+  },
+  {
+    title:"核心：不是认知疗法，是“写故事为主”的修行",
+    body:`<ul class="long">
+      <li>世界并非单一事实流，而是由叙事构成。</li>
+      <li>成为作者：设定身份/目标/路线，并承担验证义务。</li>
+    </ul>`
+  },
+  {
+    title:"如何分辨「故事 / 妄想 / 骗局」",
+    body:`<ol class="long">
+      <li>可检验性（Reality anchor）</li>
+      <li>外部回声（Echo test）</li>
+      <li>可放大性（Replicability）</li>
+      <li>利他/私利比（Benefit balance）</li>
+      <li>时间耐受性（Time test）</li>
+      <li>风险界线（Harm threshold）</li>
+    </ol>`
+  },
+  {
+    title:"怎么开始（马上能试的几个实验）",
+    body:`<ol class="long">
+      <li>刺句拆解：在刺痛话后加“这是他们写的，不是我写的”。</li>
+      <li>舞台动作：心里给自己报幕。</li>
+      <li>逆写标签：把“透明人”改写成“见证人”。</li>
+      <li>一分钟写故事：填空写一行开头。</li>
+    </ol>`
+  },
+  {
+    title:"发起人介绍",
+    body:`<p><b>🧘🏻道号 · 隐墨子</b> —— 隐匿以护方法之纯。</p>
+    <p><b>🧘🏻道号 · 青隐客</b> —— “世界存在，因为我在写”。</p>`
+  }
+];
+
+/* ========= State & helpers ========= */
+const state = {
+  lang: 'en',
+  layout: 'mobile',
+  currentSection: 'home-hero',
+  previousSection: null
+};
+
+function detectLang(){
+  const url = new URL(location.href);
+  const fromUrl = url.searchParams.get('lang');
+  const saved = localStorage.getItem('vd_lang');
+  const nav = (navigator.language||'en').slice(0,2);
+  return (fromUrl || saved || nav || 'en');
+}
+function detectLayout(){
+  const url = new URL(location.href);
+  const q = url.searchParams.get('layout');
+  const saved = localStorage.getItem('vd_layout');
+  return (q || saved || 'mobile');
+}
+
+function applyLang(){
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const k = el.getAttribute('data-i18n');
+    el.textContent = t(k);
   });
-  grid.dataset.inited = "1";
+  document.documentElement.lang = state.lang;
+  document.getElementById('langSelect').value = state.lang;
+  const url = new URL(location.href);
+  url.searchParams.set('lang', state.lang);
+  history.replaceState({}, '', url);
+  localStorage.setItem('vd_lang', state.lang);
+}
+function applyLayout(){
+  document.body.classList.toggle('layout-desktop', state.layout==='desktop');
+  document.getElementById('layoutSelect').value = state.layout;
+  const url = new URL(location.href);
+  url.searchParams.set('layout', state.layout);
+  history.replaceState({}, '', url);
+  localStorage.setItem('vd_layout', state.layout);
 }
 
-// --- modal open/close ---
-const modal = $("#modal"), body=$("#sheetBody");
-function openCard(tid){
-  const tpl = $("#"+tid);
-  if(!tpl){ toast("内容还在路上"); return; }
-  body.innerHTML = tpl.innerHTML + `<div class="sep"></div><div class="small">点击“返回”回到九宫格。</div>`;
-  modal.classList.add("open");
+/* ========= Router ========= */
+function showSection(id){
+  state.previousSection = state.currentSection;
+  state.currentSection = id;
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({top:0, behavior:'instant'});
 }
-$("#backBtn").onclick = ()=> modal.classList.remove("open");
-modal.addEventListener("click",e=>{ if(e.target===modal) modal.classList.remove("open"); });
+function toast(msg){
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.style.display='block';
+  setTimeout(()=>{ el.style.display='none'; }, 1400);
+}
 
-// default section by hash
-if(location.hash==="#about") showSection("about");
-else showSection("home");
+/* ========= Render Cards ========= */
+function renderCards(){
+  const wrap = document.getElementById('cardsList');
+  wrap.innerHTML = '';
+  CARDS.forEach(c=>{
+    const div = document.createElement('div');
+    div.className='card';
+    div.innerHTML = `
+      <div class="tag">${c.sting}</div>
+      <h3>${c.title}</h3>
+      <div class="muted">${c.ask}</div>
+    `;
+    div.addEventListener('click', ()=>{
+      const content = document.getElementById('detailContent');
+      content.innerHTML = `<h2>${c.title}</h2><div class="muted">${c.sting} · ${c.ask}</div><div style="height:10px"></div>${c.body}`;
+      document.getElementById('detailView').classList.add('active');
+      showSection('home-cards');
+      document.getElementById('detailView').scrollIntoView({behavior:'instant'});
+    });
+    wrap.appendChild(div);
+  });
+  document.getElementById('backToCards').onclick = ()=>{
+    document.getElementById('detailView').classList.remove('active');
+    document.getElementById('cardsList').scrollIntoView({behavior:'instant'});
+  };
+}
+
+function renderAbout(){
+  const wrap = document.getElementById('aboutCards');
+  wrap.innerHTML='';
+  ABOUT.forEach(item=>{
+    const div = document.createElement('div');
+    div.className='card';
+    div.innerHTML = `<h3>${item.title}</h3><div class="long">${item.body}</div>`;
+    wrap.appendChild(div);
+  });
+}
+
+/* ========= Init ========= */
+(function(){
+  state.lang = detectLang();
+  state.layout = detectLayout();
+  applyLang();
+  applyLayout();
+  renderCards();
+  renderAbout();
+
+  // Navbar
+  document.getElementById('nav-home').addEventListener('click', e=>{ e.preventDefault(); showSection('home-hero'); });
+  document.getElementById('nav-home-btn').addEventListener('click', e=>{ e.preventDefault(); showSection('home-hero'); });
+  document.getElementById('nav-stories-btn').addEventListener('click', e=>{ e.preventDefault(); showSection('stories'); });
+  document.getElementById('nav-about-btn').addEventListener('click', e=>{ e.preventDefault(); showSection('about'); });
+
+  // Hero CTA -> cards (step2)
+  document.getElementById('startBtn').addEventListener('click', ()=>{
+    showSection('home-cards');
+    toast(state.lang==='zh' ? '已进入选卡页' : 'Entering cards…');
+  });
+
+  // Lang + Layout
+  document.getElementById('langSelect').addEventListener('change', (e)=>{
+    state.lang = e.target.value;
+    applyLang();
+    toast({en:'Language switched', zh:'已切换语言', ja:'言語を切替えました', ko:'언어가 변경되었습니다'}[state.lang]||'OK');
+  });
+  document.getElementById('layoutSelect').addEventListener('change', (e)=>{
+    state.layout = e.target.value;
+    applyLayout();
+    toast(state.lang==='zh' ? (state.layout==='desktop'?'已切换为电脑版':'已切换为手机版')
+         : (state.layout==='desktop'?'Desktop layout':'Mobile layout'));
+  });
+
+  // Ensure home-cards cannot be accessed from nav directly (per spec),
+  // so clicking Home always goes to hero (step1). Direct URL can still show due to anchor not used.
+})();
 </script>
 </body>
 </html>
