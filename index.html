@@ -1,277 +1,195 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
+<!doctype html>
+<html lang="en">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>变量道 · 心理自救 – 十大痛点速览</title>
-<meta name="description" content="一眼定位你的心理痛点：确认感、偏心、回声、叙事感、掌控感、价值感、归属感、方向感、仪式感、超越感。" />
-
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>变量道 · 心理自救 | Variable Dao</title>
+<meta name="color-scheme" content="light dark" />
 <style>
-  :root{
-    --bg:#ffffff; --fg:#111111; --muted:#6b7280; --card:#f6f7f9; --ring:#e5e7eb; --accent:#111111;
-  }
-  @media (prefers-color-scheme:dark){
-    :root{ --bg:#0d0e10; --fg:#eaeaea; --muted:#a0a3a8; --card:#15171a; --ring:#272a2f; --accent:#eaeaea; }
-  }
-  html,body{height:100%}
-  body{
-    margin:0; background:var(--bg); color:var(--fg);
-    font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,"Noto Sans CJK SC","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
-  }
-  /* 顶部条 */
-  header{
-    position:sticky; top:0; z-index:20; backdrop-filter:saturate(180%) blur(10px);
-    background:color-mix(in srgb, var(--bg) 85%, transparent);
-    border-bottom:1px solid var(--ring);
-  }
-  .wrap{max-width:1100px; margin:0 auto; padding:14px 18px; display:flex; align-items:center; gap:12px;}
-  .brand{font-weight:700; letter-spacing:.5px}
-  .muted{color:var(--muted)}
-
-  /* 英雄标题 */
-  .hero{max-width:1100px; margin:40px auto 10px; padding:0 18px; text-align:center}
-  .hero h1{margin:0 0 8px; font-size:clamp(28px,4.6vw,44px); letter-spacing:.6px}
-  .hero p{margin:6px auto 0; color:var(--muted)}
-  .hero .hint{margin-top:10px; font-size:14px}
-
-  /* 放射图容器 */
-  .radial{
-    --size:min(88vw, 720px);
-    width:var(--size); height:var(--size); margin:28px auto 14px;
-    position:relative; border-radius:50%;
-    background:
-      radial-gradient(circle at center, color-mix(in srgb, var(--accent) 6%, transparent) 0 36%,
-                                   transparent 36% 100%),
-      radial-gradient(circle at center, var(--card) 0 100%);
-    border:1px solid var(--ring);
-  }
-  .center{
-    position:absolute; inset:50% auto auto 50%; transform:translate(-50%,-50%);
-    text-align:center; width:min(72%, 460px); padding:10px 12px;
-  }
-  .center h2{margin:0 0 6px; font-size:clamp(18px,2.8vw,24px)}
-  .center p{margin:0; color:var(--muted); font-size:14px}
-
-  /* 环上按钮 */
-  .node{
-    position:absolute; transform:translate(-50%,-50%);
-    display:flex; align-items:center; justify-content:center;
-    width: clamp(108px, 16vw, 150px); height: clamp(44px, 6.4vw, 56px);
-    padding:0 10px; border:1px solid var(--ring); border-radius:999px;
-    background:var(--bg); color:var(--fg); text-align:center; cursor:pointer;
-    box-shadow:0 2px 10px rgba(0,0,0,.05);
-    transition:transform .15s ease, box-shadow .15s ease, background .15s ease;
-    font-weight:600; font-size:clamp(12px,1.9vw,15px);
-    user-select:none;
-  }
-  .node small{display:block; font-weight:500; color:var(--muted); font-size:.8em}
-  .node:hover{transform:translate(-50%,-50%) scale(1.04); box-shadow:0 4px 18px rgba(0,0,0,.10)}
-  .node:active{transform:translate(-50%,-50%) scale(.98)}
-
-  /* 模态弹窗 */
-  dialog{
-    width:min(92vw,680px); border:1px solid var(--ring); border-radius:14px;
-    background:var(--bg); color:var(--fg); padding:14px 16px 16px;
-    box-shadow:0 30px 80px rgba(0,0,0,.35);
-  }
-  dialog::backdrop{background:rgba(0,0,0,.45)}
-  .modal-title{margin:0 36px 6px 0; font-size:20px; font-weight:700}
-  .modal-sub{margin:0 0 10px; color:var(--muted)}
-  .modal-body{margin:10px 0 14px}
-  .modal-body p{margin:.4em 0}
-  .modal-actions{display:flex; gap:10px; justify-content:flex-end}
-  .btn{padding:8px 12px; border-radius:10px; border:1px solid var(--ring); background:var(--card); color:var(--fg); cursor:pointer}
-  .btn.primary{background:var(--fg); color:var(--bg); border-color:var(--fg)}
-  .x{position:absolute; top:10px; right:10px; border:none; background:transparent; color:var(--muted); font-size:22px; cursor:pointer}
-
-  /* 脚注 */
-  footer{max-width:1100px; margin:26px auto 60px; padding:0 18px; color:var(--muted); font-size:14px; text-align:center}
+:root{
+  --bg:#fff; --fg:#151517; --muted:#63636b; --card:#f6f7f9; --line:#e7e8ec; --accent:#111;
+}
+@media (prefers-color-scheme: dark){
+  :root{ --bg:#0c0d11; --fg:#eaeaf1; --muted:#a6a9b4; --card:#151720; --line:#222533; --accent:#eaeaf1; }
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--fg);font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol"}
+.wrap{max-width:1024px;margin:0 auto;padding:0 16px}
+a{color:inherit;text-decoration:none}
+header{position:sticky;top:0;border-bottom:1px solid var(--line);background:color-mix(in oklab, var(--bg) 85%, transparent);backdrop-filter:saturate(160%) blur(8px);z-index:20}
+.nav{height:56px;display:flex;align-items:center;justify-content:space-between}
+.brand{font-weight:800;letter-spacing:.2px}
+.nav-right{display:flex;gap:10px;align-items:center}
+.btn{border:1px solid var(--line);padding:8px 12px;border-radius:12px}
+.btn[aria-disabled="true"]{opacity:.45;cursor:not-allowed}
+select{appearance:none;border:1px solid var(--line);background:var(--card);color:var(--fg);border-radius:12px;padding:8px 28px 8px 10px}
+/* hero */
+.hero{padding:64px 0 36px}
+.h1{font-size:clamp(28px,6vw,44px);line-height:1.15;margin:0 0 12px;font-weight:800}
+.lead{margin:8px 0;color:var(--muted);font-size:clamp(15px,3.5vw,19px)}
+.cta{margin-top:20px;display:flex;gap:12px;align-items:center}
+.btn-primary{display:inline-flex;align-items:center;gap:10px;border:1px solid var(--fg);border-radius:14px;padding:12px 16px;font-weight:700}
+.pen{width:18px;height:18px}
+.note{margin-top:10px;color:var(--muted)}
+.pill{display:inline-block;border:1px solid var(--line);padding:2px 8px;border-radius:999px;margin-right:6px;font-size:12px;color:var(--muted)}
+/* cards */
+section[hidden]{display:none}
+.grid{display:grid;grid-template-columns:repeat(1,minmax(0,1fr));gap:12px;margin:16px 0 36px}
+@media (min-width:640px){.grid{grid-template-columns:repeat(2,1fr)}}
+@media (min-width:960px){.grid{grid-template-columns:repeat(3,1fr)}}
+.card{padding:16px;border:1px solid var(--line);border-radius:14px;background:var(--card);cursor:pointer;transition:transform .08s ease,border-color .15s ease}
+.card:hover{transform:translateY(-1px);border-color:var(--fg)}
+.card h3{margin:0 0 6px;font-size:18px}
+.card small{display:block;color:var(--muted)}
+/* modal */
+dialog{width:min(860px,94vw);border:1px solid var(--line);border-radius:16px;padding:0;background:var(--bg);color:var(--fg)}
+.dlg-head{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid var(--line)}
+.dlg-body{padding:18px;max-height:min(72vh, calc(100dvh - 160px));overflow:auto}
+.x{border:1px solid var(--line);border-radius:10px;padding:6px 10px}
+.sep{border-top:1px dashed var(--line);margin:16px 0}
+h4{margin:18px 0 8px}
+blockquote{margin:12px 0;padding-left:12px;border-left:3px solid var(--line);color:var(--muted)}
+footer{border-top:1px solid var(--line);padding:28px 0 48px;color:var(--muted)}
+/* accessibility */
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 </style>
 </head>
 <body>
-
 <header>
-  <div class="wrap">
-    <div class="brand">变量道 · Variable Path</div>
-    <div class="muted">心理自救 × 哲学安全</div>
+  <div class="wrap nav">
+    <a class="brand" href="#/"><span data-i18n="brand">变量道 · 心理自救</span></a>
+    <div class="nav-right">
+      <a class="btn" href="#/" data-i18n="nav.home">首页</a>
+      <a class="btn" aria-disabled="true" role="link" tabindex="-1" data-i18n="nav.more">更多内容正在搭建中（点击无效）</a>
+      <label class="sr-only" for="langSel">Language</label>
+      <select id="langSel">
+        <option value="en">EN</option>
+        <option value="zh">中文</option>
+        <option value="ja">日本語</option>
+        <option value="ko">한국어</option>
+      </select>
+    </div>
   </div>
 </header>
 
-<section class="hero">
-  <h1>心理自救 · 十大痛点速览</h1>
-  <p>一眼定位你的当下卡点，点击任意词即可展开说明与下一步行动。</p>
-  <div class="hint">（不开放评论，沉思而非争辩）</div>
-</section>
+<main class="wrap">
+  <!-- 1: HERO -->
+  <section id="hero" class="hero">
+    <h1 class="h1" data-i18n="hero.title">变量道 · 心理自救</h1>
+    <p class="lead" data-i18n="hero.l1">他们给你故事，你只被分配到角色。</p>
+    <p class="lead" data-i18n="hero.l2">我们给你笔。</p>
+    <p class="lead" data-i18n="hero.l3">思维进化，不逃避不妄想——把现实当素材来书写。</p>
+    <p class="lead" data-i18n="hero.l4">从此，故事听你的。</p>
+    <div class="cta">
+      <a class="btn-primary" id="goCards">
+        <svg class="pen" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M3 21l3.8-1 10.6-10.6a2.2 2.2 0 0 0 0-3.2l-.6-.6a2.2 2.2 0 0 0-3.2 0L3 15.8 3 21zM14 6l4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span data-i18n="hero.cta">我来执笔</span>
+      </a>
+    </div>
+    <p class="note"><span class="pill">Minimal</span><span class="pill">No comments</span><span class="pill">Multi‑language</span></p>
+  </section>
 
-<!-- 放射式十环图 -->
-<div class="radial" id="radial">
-  <div class="center">
-    <h2>点选你的当前痛点</h2>
-    <p>这是一个为思考者准备的空间：清晰、克制、可行动。</p>
-  </div>
-  <!-- 10 个节点由 JS 自动定位 -->
-</div>
+  <!-- 2: CARDS (must come from 1) -->
+  <section id="cards" hidden>
+    <p class="lead" data-i18n="cards.note">“看到哪条让你想爆粗口，就点它。”</p>
+    <div id="cardsGrid" class="grid"></div>
+  </section>
+</main>
 
-<dialog id="modal">
-  <button class="x" aria-label="关闭">×</button>
-  <h3 class="modal-title" id="mt"></h3>
-  <p class="modal-sub" id="ms"></p>
-  <div class="modal-body" id="mb"></div>
-  <div class="modal-actions">
-    <button class="btn" id="closeBtn">关闭</button>
-    <a class="btn primary" id="goBtn" href="#more">了解更多</a>
-  </div>
-</dialog>
-
-<footer>
-  © 变量道 — 自救，从看见自己开始。
+<footer class="wrap">
+  <div data-i18n="footer.copy">© 变量道</div>
+  <div data-i18n="footer.tag">给思考者/洞察者的一方安静之地。</div>
 </footer>
 
+<!-- Modal -->
+<dialog id="dlg">
+  <div class="dlg-head">
+    <strong id="dlgTitle">…</strong>
+    <button class="x" id="dlgClose" aria-label="Close">✕</button>
+  </div>
+  <div class="dlg-body" id="dlgBody"></div>
+</dialog>
+
 <script>
-/* ========= 数据：10 个痛点 ========= */
-const ITEMS = [
-  {
-    key:'exist', title:'确认感', en:'I exist for someone',
-    bullets:[
-      '不仅“我存在”，而是“我的存在被看见”。',
-      '长期被忽视会把人推向无力与冷漠。',
-      '做法：建立稳定的「被看见渠道」（日记/定期复盘/一对一链接）。'
-    ]
+// ---------- i18n core ----------
+const I18N = {
+  en:{
+    brand:"Variable Dao · Psychological Self‑Rescue",
+    nav:{home:"Home",more:"More coming (disabled)"},
+    hero:{
+      title:"Variable Dao · Psychological Self‑Rescue",
+      l1:"They hand you a story and assign you a role.",
+      l2:"We hand you the pen.",
+      l3:"Evolving the mind—neither escapism nor delusion. Use reality as material.",
+      l4:"From now on, the story listens to you.",
+      cta:"I'll take the pen"
+    },
+    cardsNote:"Tap the one that makes you want to swear.",
+    footer:{copy:"© Variable Dao",tag:"A quiet place for thinkers and observers."},
   },
-  {
-    key:'special', title:'偏心', en:'I matter more than average',
-    bullets:[
-      '人在关键关系里需要“唯一性”。',
-      '无差别的平等会被体验为“可替代”。',
-      '做法：圈定你的“少数关键关系”，投入可感知的独特性。'
-    ]
+  zh:{
+    brand:"变量道 · 心理自救",
+    nav:{home:"首页",more:"更多内容正在搭建中（点击无效）"},
+    hero:{
+      title:"变量道 · 心理自救",
+      l1:"他们给你故事，你只被分配到角色。",
+      l2:"我们给你笔。",
+      l3:"思维进化，不逃避不妄想——把现实当素材来书写。",
+      l4:"从此，故事听你的。",
+      cta:"我来执笔"
+    },
+    cardsNote:"“看到哪条让你想爆粗口，就点它。”",
+    footer:{copy:"© 变量道",tag:"给思考者/洞察者的一方安静之地。"},
   },
-  {
-    key:'echo', title:'回声', en:'I am not talking to the void',
-    bullets:[
-      '说出的话/做过的事，要有回应与反馈。',
-      '没回声的人会逐渐失语，甚至自我怀疑。',
-      '做法：用「小闭环」训练回应周期（24h 内给到回执/总结）。'
-    ]
+  ja:{
+    brand:"変数道・心の自救",
+    nav:{home:"ホーム",more:"準備中（無効）"},
+    hero:{
+      title:"変数道・心の自救",
+      l1:"彼らは物語を与え、あなたに役だけを割り当てる。",
+      l2:"私たちは筆を渡す。",
+      l3:"逃避でも妄想でもない。現実を素材に書く。",
+      l4:"物語は、あなたの声を聞く。",
+      cta:"筆を取る"
+    },
+    cardsNote:"怒鳴りたくなる項目を押せ。",
+    footer:{copy:"© 変数道",tag:"思考者と観察者のための静かな場所。"},
   },
-  {
-    key:'story', title:'叙事感', en:'My life is a story',
-    bullets:[
-      '把痛苦写进故事，意义感会让人能承受。',
-      '无叙事 = 虚无；混乱 = 叙事崩塌。',
-      '做法：每周一段 150 字「本周一幕」。'
-    ]
-  },
-  {
-    key:'control', title:'掌控感', en:'I can influence outcomes',
-    bullets:[
-      '不必全能，但要确信行动能改变些东西。',
-      '完全失控 = 抑郁的温床。',
-      '做法：定义「可控半径」，列 3 件 48 小时可完成的小事。'
-    ]
-  },
-  {
-    key:'value', title:'价值感', en:'I am useful / valuable',
-    bullets:[
-      '对社会、对个人、对具体体系有用。',
-      '没有价值感的人会觉得自己是“多余的”。',
-      '做法：建立可见的价值输出清单（周更）。'
-    ]
-  },
-  {
-    key:'belong', title:'归属感', en:'I am part of a tribe',
-    bullets:[
-      '人类天生是群居动物，长期孤立会疯。',
-      '归属不必宏大，哪怕是 5 人小组。',
-      '做法：设立「低门槛固定连接」的节律（每周一次固定语音/散步）。'
-    ]
-  },
-  {
-    key:'direction', title:'方向感', en:'I am going somewhere',
-    bullets:[
-      '人要相信自己在前进（修炼/财富/情感）。',
-      '停滞 = 焦虑；方向 = 安心。',
-      '做法：定义 90 天主题，只做“指向主题”的事。'
-    ]
-  },
-  {
-    key:'ritual', title:'仪式感', en:'This moment is sacred',
-    bullets:[
-      '仪式把普通时刻变成“有意义的时刻”。',
-      '没有仪式，时间只会流走。',
-      '做法：为关键行动配一个固定开场/收尾动作。'
-    ]
-  },
-  {
-    key:'transcend', title:'超越感', en:'I touch something greater',
-    bullets:[
-      '宗教/修炼/哲学/科学/艺术都能提供连接更大的东西。',
-      '让人相信自己不是孤立的沙子，而是大海的一滴。',
-      '做法：建立每周一次「与大于自我的连接」时段（阅读/参观/自然）。'
-    ]
+  ko:{
+    brand:"변수도 · 심리 자구",
+    nav:{home:"홈",more:"준비 중(비활성)"},
+    hero:{
+      title:"변수도 · 심리 자구",
+      l1:"그들은 이야기를 주고, 너에게 배역만 준다.",
+      l2:"우리는 펜을 건넨다.",
+      l3:"도피도 망상도 아니다. 현실을 재료로 써라.",
+      l4:"이제부터 이야기는 너를 따른다.",
+      cta:"내가 붓을 든다"
+    },
+    cardsNote:"욕이 튀어나오는 카드를 눌러라.",
+    footer:{copy:"© 변수도",tag:"사유와 통찰을 위한 조용한 공간."},
   }
-];
+};
 
-/* ========= 生成节点并放射定位 ========= */
-const radial = document.getElementById('radial');
-const RATIO = 0.78;            // 节点环的半径（相对容器半径）
-const center = {x:0, y:0};
-
-function placeNodes(){
-  // 清理旧节点
-  radial.querySelectorAll('.node').forEach(n=>n.remove());
-
-  const size = radial.getBoundingClientRect().width;
-  const r = size/2 * RATIO;
-  center.x = size/2; center.y = size/2;
-
-  ITEMS.forEach((it, i)=>{
-    const angle = (i/ITEMS.length) * Math.PI*2 - Math.PI/2; // 从顶部开始均分
-    const x = center.x + r * Math.cos(angle);
-    const y = center.y + r * Math.sin(angle);
-    const el = document.createElement('button');
-    el.className = 'node';
-    el.style.left = x + 'px';
-    el.style.top  = y + 'px';
-    el.innerHTML = `${it.title}<small>${it.en}</small>`;
-    el.setAttribute('data-key', it.key);
-    el.addEventListener('click', ()=> openModal(it));
-    radial.appendChild(el);
+// ---------- language detect ----------
+function getLang(){
+  const url = new URL(location.href);
+  const q = url.searchParams.get('lang');
+  if(q){ localStorage.setItem('lang', q); return q; }
+  const ls = localStorage.getItem('lang'); if(ls) return ls;
+  const nav = (navigator.language||'en').slice(0,2);
+  return ['en','zh','ja','ko'].includes(nav)? nav:'en';
+}
+function applyI18N(lang){
+  const dict = I18N[lang] || I18N.en;
+  document.documentElement.lang = lang;
+  // text nodes
+  document.querySelectorAll("[data-i18n]").forEach(el=>{
+    const path = el.getAttribute("data-i18n").split(".");
+    let cur = dict;
+    for(const k of path){ if(cur && k in cur){ cur = cur[k]; } }
+    if(typeof cur === "string"){ el.textContent = cur; }
   });
-}
-window.addEventListener('resize', placeNodes);
-placeNodes();
-
-/* ========= 模态弹窗 ========= */
-const modal = document.getElementById('modal');
-const mt = document.getElementById('mt');
-const ms = document.getElementById('ms');
-const mb = document.getElementById('mb');
-const goBtn = document.getElementById('goBtn');
-
-function openModal(it){
-  mt.textContent = `${it.title}`;
-  ms.textContent = it.en;
-  mb.innerHTML = it.bullets.map(b=>`<p>· ${b}</p>`).join('');
-  goBtn.href = `#${it.key}`;
-  modal.showModal();
-}
-document.querySelector('.x').onclick = ()=>modal.close();
-document.getElementById('closeBtn').onclick = ()=>modal.close();
-
-/* ========= 占位：详细段落锚点（可后续替换为独立页面） ========= */
-const more = document.createElement('section');
-more.id='more';
-more.style.maxWidth='900px';
-more.style.margin='40px auto 80px';
-more.style.padding='0 18px';
-more.innerHTML = ITEMS.map(it=>`
-  <article id="${it.key}" style="margin:36px 0; padding:16px; border:1px solid var(--ring); border-radius:12px; background:var(--card)">
-    <h3 style="margin:0 0 6px">${it.title} <small style="color:var(--muted); font-weight:500">/ ${it.en}</small></h3>
-    <p style="margin:6px 0 0; color:var(--muted)">（这里未来放该主题的长文/工具卡/练习）</p>
-  </article>
-`).join('');
-document.body.appendChild(more);
-</script>
-</body>
-</html>
+  document.querySelector(".brand span").textContent = dict.brand;
