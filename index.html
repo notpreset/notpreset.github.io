@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Variable Dao — 单文件预览（首页+当空气）</title>
+<title>Variable Dao — 单文件（步骤1→2逻辑修复）</title>
 <style>
   :root{--maxw:900px;--pad:16px;--accent:#2b6df6}
   *{box-sizing:border-box}
@@ -14,25 +14,32 @@
   select.chip{font-size:13px; padding:6px 10px; min-width:86px; max-width:120px}
   .grow{flex:1}
   main{max-width:var(--maxw);margin:0 auto;padding:0 var(--pad)}
-  .hero{max-width:720px;margin:12vh auto 8vh;text-align:center}
+  /* Step 1 */
+  .hero{max-width:720px;margin:12vh auto 10vh;text-align:center}
   .h1{font-weight:900;font-size:clamp(28px,5.2vw,44px);margin:6px 0 10px}
   .lead{color:rgba(0,0,0,.75);font-size:16px;margin:8px 0 18px}
   .btn{display:inline-block;padding:12px 18px;border-radius:12px;border:1px solid rgba(0,0,0,.08);cursor:pointer;font-weight:700}
-  .cards{display:grid;gap:14px;margin:0 auto 16vh;max-width:760px}
+  /* Step 2 selection */
+  .page{display:none}
+  #select{max-width:760px;margin:8vh auto 14vh}
+  .sel-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+  .sel-title{font-size:18px;font-weight:900}
+  .cards{display:grid;gap:14px}
   .card{border:1px solid rgba(0,0,0,.08);border-radius:14px;padding:12px;background:#fff}
   .card h3{margin:6px 0;font-size:18px}
   .muted{opacity:.7;font-size:14px}
   /* detail view */
-  .detail{display:none;margin-top:12px}
-  .detail.active{display:block}
-  .detail .content{padding:16px;border-radius:12px;border:1px solid rgba(0,0,0,.08);background:#fff}
+  #detail{display:none;margin-top:12px}
+  #detail.active{display:block}
+  #detail .content{padding:16px;border-radius:12px;border:1px solid rgba(0,0,0,.08);background:#fff}
+  .back{margin:0 0 12px;display:inline-flex;align-items:center;gap:6px;padding:8px 12px;border:1px solid rgba(0,0,0,.08);border-radius:999px;background:#fff;cursor:pointer}
   .pill{display:inline-block;padding:8px 12px;border-radius:999px;background:#f3f6ff;font-weight:800;margin:10px 0}
   .long{font-size:18px;line-height:1.9;color:#111}
   footer{max-width:var(--maxw);margin:0 auto 26px;padding:0 var(--pad);color:rgba(0,0,0,.6);font-size:13px;text-align:center}
   @media (prefers-color-scheme:dark){
     body{background:#050507;color:#e9e9ee}
     header{background:rgba(5,5,7,.6);border-bottom:1px solid rgba(255,255,255,.06)}
-    .card,.detail .content{background:#0e0e11;border-color:#26262b}
+    .card,#detail .content,.back{background:#0e0e11;border-color:#26262b}
     .pill{background:#132032;color:#e8f2ff}
   }
 </style>
@@ -40,9 +47,9 @@
 <body>
 <header>
   <div class="nav-left">
-    <button class="chip nav-link" data-target="home">首页</button>
-    <button class="chip nav-link" data-target="stories">故事</button>
-    <button class="chip nav-link" data-target="about">关于我们</button>
+    <button class="chip" id="navHome">首页</button>
+    <button class="chip" id="navStories">故事</button>
+    <button class="chip" id="navAbout">关于我们</button>
   </div>
   <div class="grow"></div>
   <select id="layoutSelect" class="chip" title="layout">
@@ -59,27 +66,35 @@
 </header>
 
 <main>
-  <section id="home" class="page" style="display:block">
+  <!-- Step 1 -->
+  <section id="landing" class="page" style="display:block">
     <div class="hero">
       <div class="h1" id="heroTitle">变量道 · 心理自救</div>
       <div class="lead" id="heroLead">他们给你故事，你只被分配到角色。 我们给你笔。</div>
       <button id="startBtn" class="btn">🖊️ 我来执笔</button>
     </div>
+  </section>
 
-    <div class="cards" id="cardsList">
-      <!-- 卡片将被插入 -->
+  <!-- Step 2 (only visible after clicking the pen button) -->
+  <section id="select" class="page">
+    <div class="sel-head">
+      <div class="sel-title" id="selectTitle">“看到哪条让你想爆粗口，就点它。”</div>
+      <button class="chip" id="selBack">← 返回首页</button>
     </div>
-
-    <div id="detail" class="detail" aria-hidden="true">
+    <div class="cards" id="cardsList"></div>
+    <!-- detail lives inside select page -->
+    <div id="detail" aria-hidden="true">
+      <button class="back" id="backToSelect">← 返回选卡</button>
       <div class="content" id="detailContent"></div>
     </div>
   </section>
 
-  <section id="stories" class="page" style="display:none">
+  <!-- placeholders for nav -->
+  <section id="stories" class="page">
     <div class="card"><strong>故事</strong><p class="muted">内容正在搭建中，敬请期待。</p></div>
   </section>
 
-  <section id="about" class="page" style="display:none">
+  <section id="about" class="page">
     <div class="card"><strong>关于我们（预览）</strong>
       <p class="muted">声明、我们的立场与发起人介绍将在最终版完整展示。</p>
     </div>
@@ -89,7 +104,7 @@
 <footer>© 2025 变量道 · 让世界成为可书写的素材。</footer>
 
 <script>
-// ====== 单文件内置数据（第一张卡片：当空气）======
+// ====== 数据（仅一张卡：当空气）======
 const DATA = {
   cards: [{
     id: "air",
@@ -168,140 +183,77 @@ Variable Dao · Evidence
 Variable Dao · Insight
 To be seen is human fuel at the base layer.
 You’re not begging love or insult; you’re pinning “this is me” in someone else’s world.
-From “air” to “being called by name,” a new story begins.`,
-      ja: `短編｜「二つの影」
-
-同じ教室に、A と B という二つの影がいた。
-点呼では飛ばされ、グループ分けでも誰にも呼ばれず、手を挙げても見られない——まるで空気。
-黒板は何度も拭かれるのに、彼らの名前が残ることは一度もなかった。
-
-A の物語：
-「大人しく、迷惑をかけない。成績で語る。いつかきっと見られる。」
-彼はさらに静かに、さらに背筋を伸ばす。
-一か月後、彼は疑い始める——本当に自分は重要ではないのか？
-間違ってはいない。静か、礼儀正しい、克己——すべて正しい。
-だが彼の人生はミュートされたようで、スポットライトは決して自ら彼を照らさない。
-
-B の物語は別の版：
-「誰も見ないなら、とにかく世界に音を立てよう。」
-体操で半拍ずらしや誇張した動きをわざと入れ、周りを笑わせる。
-クラスの試合を“もっともらしい実況”に編集し、休み時間に校内放送で流す。
-学年主任は眉をひそめる。「ふざけるな。」
-だがクラスは彼を「実況くん」と呼び始めた。
-それも間違いではない——やんちゃ、出過ぎ、叱られる——すべて“正しい”。
-彼は「空気」から「名指しされる人」へと変わったのだ。
-
-変数道・骨
-🦴 確認感（誰かのために私は存在する）
-🦴 「私は存在する」だけでなく、「私の存在が見られる」こと。
-🦴 愛されるでも叱られるでもよい。最も恐ろしいのは完全な無視。
-
-変数道・証
-• A は「誰かが役をくれるのを待つ」物語に囚われている。
-• B は「自分は誰か」を前に出し、あだ名やネタなどの強いマーカーを置いた。
-• どちらの論理も正しい。ならば、より生き生きして楽しく生きられる“正しい”を選べばいい。
-
-変数道・悟り
-見られることは、人間の底層の燃料だ。
-愛や罵倒を求めるのではない。他者の世界に「これは私だ」というピンを打つこと。
-「空気」から「名指し」へ——新しい物語が始まる。`,
-      ko: `단편｜〈두 개의 그림자〉
-
-같은 교실에 A와 B, 두 개의 그림자가 있었다.
-호명에서도 빠지고, 조 편성에서도 아무도 부르지 않고, 손을 들어도 보지 않는다 — 마치 공기.
-칠판은 여러 번 지워지지만, 그들의 이름은 한 번도 남지 않았다.
-
-A의 이야기:
-“얌전하게, 폐 끼치지 말자. 성적으로 말하자. 언젠가 보게 될 거야.”
-그래서 그는 더 조용해지고 더 바르게 앉았다.
-한 달 뒤 그는 의심하기 시작한다. ‘나는 정말 중요하지 않은가?’
-그는 틀리지 않았다 — 조용함, 예의, 절제는 다 옳다.
-하지만 그의 삶은 음소거된 듯했고, 조명은 결코 스스로 그를 비추지 않았다.
-
-B의 이야기는 다른 판본:
-“아무도 보지 않는다면, 일단 세상에 소리를 내자.”
-체조 시간에 일부러 반 박 늦거나 과장된 동작을 해 옆 친구들을 웃긴다.
-반 경기 영상을 “진지한 척 해설”로 편집해 쉬는 시간에 방송 장비로 틀었다.
-학년 주임은 찡그렸다. “장난치지 마.”
-하지만 반은 그를 “해설가”라 부르기 시작했다.
-이것도 틀리지 않았다 — 장난, 과잉, 꾸지람 — 모두 옳다.
-그는 “공기”에서 “이름 불리는 사람”으로 변했다.
-
-변수도 · 뼈
-🦴 확인감(I exist for someone)
-🦴 단지 “존재한다”가 아니라 “나의 존재가 보인다”는 것.
-🦴 사랑이든 꾸짖음이든 좋다. 가장 두려운 것은 완전한 무시다.
-
-변수도 · 증거
-• A는 “누군가가 역할을 줄 때까지 기다려라”는 이야기에 갇혀 있다.
-• B는 “나는 누구인가”를 앞에 두고, 별명·농담·호명될 이유 같은 큰 표식을 남겼다.
-• 둘 다 옳다. 그러니 더 생기가 있고 더 즐거운 ‘옳음’ 속에서 살아라.
-
-변수도 · 깨달음
-보이는 것은 인간의 바닥 연료다.
-사랑이나 욕을 구하는 게 아니라, 타인의 세계에 “이것이 나다”라는 핀을 꽂는 일.
-“공기”에서 “이름 불림”으로 — 새로운 이야기가 시작된다.`
+From “air” to “being called by name,” a new story begins.`
     }
   }]
 };
 
-// ====== 语言与导航逻辑（简化版）======
+// ====== 状态 & 语言 ======
 const state = { 
   lang: (new URL(location.href)).searchParams.get('lang') || localStorage.getItem('vd_lang') || (navigator.language||'en').slice(0,2),
-  layout: localStorage.getItem('vd_layout') || 'mobile'
+  step: 1
 };
+function t(o){ return o[state.lang] || o.zh || ''; }
 
-function t(obj){ return obj[state.lang] || obj['zh'] || ''; }
-
-function renderCards(){
-  const wrap = document.getElementById('cardsList'); wrap.innerHTML='';
+// ====== 渲染逻辑 ======
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.style.display='none');
+  document.getElementById(id).style.display='block';
+}
+function renderList(){
+  const list = document.getElementById('cardsList'); list.innerHTML='';
   DATA.cards.forEach(c=>{
     const el=document.createElement('div'); el.className='card';
-    el.innerHTML = `<div class="muted">${t(c.sting)}</div><h3>${t(c.title)}</h3><div class="muted">${t(c.ask)}</div>`;
-    el.addEventListener('click', ()=>openDetail(c));
-    wrap.appendChild(el);
+    el.innerHTML=`<div class="muted">${t(c.sting)}</div><h3>${t(c.title)}</h3><div class="muted">${t(c.ask)}</div>`;
+    el.addEventListener('click',()=>openDetail(c));
+    list.appendChild(el);
   });
 }
 function openDetail(c){
   const det=document.getElementById('detail'); const box=document.getElementById('detailContent');
   const txt=(c.body[state.lang]&&c.body[state.lang].trim())?c.body[state.lang]:c.body.zh;
-  // 分割 pill（故事/道骨/道证/觉悟）
-  let html = txt.replace(/\n\n/g,'</p><p>').replace(/\n/g,'<br>');
-  html = html.replace(/变量道\s*·\s*道骨|Variable Dao\s*·\s*Bone|変数道・骨|변수도\s*·\s*뼈/g,'</p><div class="pill">道骨</div><p>');
-  html = html.replace(/变量道\s*·\s*道证|Variable Dao\s*·\s*Evidence|変数道・証|변수도\s*·\s*증거/g,'</p><div class="pill">道证</div><p>');
-  html = html.replace(/变量道\s*·\s*觉悟|Variable Dao\s*·\s*Insight|変数道・悟り|변수도\s*·\s*깨달음/g,'</p><div class="pill">觉悟</div><p>');
-  box.innerHTML = `<h2>${t(c.title)}</h2><div class="muted">${t(c.sting)} · ${t(c.ask)}</div><div class="long"><p>${html}</p></div>`;
+  let html=txt.replace(/\n\n/g,'</p><p>').replace(/\n/g,'<br>');
+  html=html.replace(/变量道\s*·\s*道骨|Variable Dao\s*·\s*Bone|変数道・骨|변수도\s*·\s*뼈/g,'</p><div class="pill">道骨</div><p>');
+  html=html.replace(/变量道\s*·\s*道证|Variable Dao\s*·\s*Evidence|変数道・証|변수도\s*·\s*증거/g,'</p><div class="pill">道证</div><p>');
+  html=html.replace(/变量道\s*·\s*觉悟|Variable Dao\s*·\s*Insight|変数道・悟り|변수도\s*·\s*깨달음/g,'</p><div class="pill">觉悟</div><p>');
+  box.innerHTML=`<h2>${t(c.title)}</h2><div class="muted">${t(c.sting)} · ${t(c.ask)}</div><div class="long"><p>${html}</p></div>`;
   det.classList.add('active'); det.setAttribute('aria-hidden','false'); det.scrollIntoView({behavior:'smooth'});
 }
 
-document.getElementById('startBtn').addEventListener('click', ()=>{
-  // 修复：点击“我来执笔”滚动到卡片列表
-  document.getElementById('cardsList').scrollIntoView({behavior:'smooth', block:'start'});
+// ====== 事件绑定 ======
+document.getElementById('startBtn').addEventListener('click',()=>{
+  // 严格按文档：点击笔 -> 进入“选卡页面”
+  state.step=2;
+  showPage('select');
+  renderList();
+  document.getElementById('selectTitle').scrollIntoView({behavior:'smooth'});
 });
-document.querySelectorAll('.nav-link').forEach(btn=>btn.addEventListener('click', (e)=>{
-  const target = e.currentTarget.dataset.target;
-  document.querySelectorAll('.page').forEach(p=>p.style.display='none');
-  document.getElementById(target).style.display='block';
+document.getElementById('selBack').addEventListener('click',()=>{
+  state.step=1; showPage('landing');
+});
+document.getElementById('backToSelect').addEventListener('click',()=>{
   document.getElementById('detail').classList.remove('active');
-}));
+  document.getElementById('detail').setAttribute('aria-hidden','true');
+  document.getElementById('selectTitle').scrollIntoView({behavior:'smooth'});
+});
 
-// 语言选择：默认先显示 Language，占位；用户选择后记忆
+// 顶部“首页/故事/关于我们”只是占位导航（不绕过第1步的主入口）
+document.getElementById('navHome').addEventListener('click',()=>showPage('landing'));
+document.getElementById('navStories').addEventListener('click',()=>showPage('stories'));
+document.getElementById('navAbout').addEventListener('click',()=>showPage('about'));
+
+// 语言选择（占位 -> 选择后记忆）
 const langSel=document.getElementById('langSelect');
 if(!localStorage.getItem('vd_lang_selected')){ langSel.value=""; } else { langSel.value=state.lang; }
 langSel.addEventListener('change',(e)=>{
   const v=e.target.value; if(!v) return;
   state.lang=v; localStorage.setItem('vd_lang',v); localStorage.setItem('vd_lang_selected','1');
   const ph=langSel.querySelector('option[data-placeholder]'); if(ph) ph.remove();
-  langSel.value=v; renderCards();
+  renderList(); // 选卡页的文案刷新
 });
 
-document.getElementById('layoutSelect').addEventListener('change',(e)=>{
-  state.layout=e.target.value; localStorage.setItem('vd_layout',state.layout);
-});
-
-// 初始渲染
-if(!['zh','en','ja','ko'].includes(state.lang)) state.lang='en';
-renderCards();
+// 初始：只显示 Step1
+showPage('landing');
 </script>
 </body>
 </html>
