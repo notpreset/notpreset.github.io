@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Variable Dao — 单文件（步骤1→2逻辑修复）</title>
+<title>Variable Dao — 单文件（返回键粘顶 + 详情随语言切换）</title>
 <style>
-  :root{--maxw:900px;--pad:16px;--accent:#2b6df6}
+  :root{--maxw:900px;--pad:16px;--accent:#2b6df6;--stickyTop:60px}
   *{box-sizing:border-box}
   body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;margin:0;color:#111;background:#fff;line-height:1.65}
-  header{position:sticky;top:0;background:rgba(255,255,255,.92);padding:8px 12px;border-bottom:1px solid rgba(0,0,0,.06);z-index:10;display:flex;align-items:center;gap:10px;overflow:auto}
+  header{position:sticky;top:0;background:rgba(255,255,255,.92);padding:8px 12px;border-bottom:1px solid rgba(0,0,0,.06);z-index:20;display:flex;align-items:center;gap:10px;overflow:auto}
   .nav-left{display:flex;gap:8px;align-items:center}
   .chip{padding:7px 11px;border-radius:999px;border:1px solid rgba(0,0,0,.08);background:transparent;cursor:pointer;white-space:nowrap}
   select.chip{font-size:13px; padding:6px 10px; min-width:86px; max-width:120px}
@@ -28,11 +28,11 @@
   .card{border:1px solid rgba(0,0,0,.08);border-radius:14px;padding:12px;background:#fff}
   .card h3{margin:6px 0;font-size:18px}
   .muted{opacity:.7;font-size:14px}
-  /* detail view */
+  /* detail view inside select */
   #detail{display:none;margin-top:12px}
   #detail.active{display:block}
   #detail .content{padding:16px;border-radius:12px;border:1px solid rgba(0,0,0,.08);background:#fff}
-  .back{margin:0 0 12px;display:inline-flex;align-items:center;gap:6px;padding:8px 12px;border:1px solid rgba(0,0,0,.08);border-radius:999px;background:#fff;cursor:pointer}
+  .back{position:sticky; top:var(--stickyTop); z-index:15; margin:0 0 12px;display:inline-flex;align-items:center;gap:6px;padding:8px 12px;border:1px solid rgba(0,0,0,.08);border-radius:999px;background:#fff;cursor:pointer}
   .pill{display:inline-block;padding:8px 12px;border-radius:999px;background:#f3f6ff;font-weight:800;margin:10px 0}
   .long{font-size:18px;line-height:1.9;color:#111}
   footer{max-width:var(--maxw);margin:0 auto 26px;padding:0 var(--pad);color:rgba(0,0,0,.6);font-size:13px;text-align:center}
@@ -104,6 +104,13 @@
 <footer>© 2025 变量道 · 让世界成为可书写的素材。</footer>
 
 <script>
+// ====== 多语言 UI 文案 ======
+const UI = {
+  selectTitle: { zh:'“看到哪条让你想爆粗口，就点它。”', en:'“Tap the line that makes you want to swear.”', ja:'「どの一文が一番ムカつく？それをタップ。」', ko:'“욕이 튀어나오게 하는 줄을 탭하세요.”' },
+  backHome:    { zh:'← 返回首页', en:'← Back to Home', ja:'← ホームへ戻る', ko:'← 홈으로' },
+  backSelect:  { zh:'← 返回选卡', en:'← Back to list', ja:'← 選択へ戻る', ko:'← 목록으로' }
+};
+
 // ====== 数据（仅一张卡：当空气）======
 const DATA = {
   cards: [{
@@ -191,7 +198,8 @@ From “air” to “being called by name,” a new story begins.`
 // ====== 状态 & 语言 ======
 const state = { 
   lang: (new URL(location.href)).searchParams.get('lang') || localStorage.getItem('vd_lang') || (navigator.language||'en').slice(0,2),
-  step: 1
+  step: 1,
+  currentCard: null
 };
 function t(o){ return o[state.lang] || o.zh || ''; }
 
@@ -200,16 +208,22 @@ function showPage(id){
   document.querySelectorAll('.page').forEach(p=>p.style.display='none');
   document.getElementById(id).style.display='block';
 }
+function renderUIStrings(){
+  document.getElementById('selectTitle').textContent = t(UI.selectTitle);
+  document.getElementById('selBack').textContent     = t(UI.backHome);
+  document.getElementById('backToSelect').textContent= t(UI.backSelect);
+}
 function renderList(){
   const list = document.getElementById('cardsList'); list.innerHTML='';
   DATA.cards.forEach(c=>{
     const el=document.createElement('div'); el.className='card';
     el.innerHTML=`<div class="muted">${t(c.sting)}</div><h3>${t(c.title)}</h3><div class="muted">${t(c.ask)}</div>`;
-    el.addEventListener('click',()=>openDetail(c));
+    el.addEventListener('click',()=>openDetail(c,true));
     list.appendChild(el);
   });
 }
-function openDetail(c){
+function openDetail(c, doScroll){
+  state.currentCard = c;
   const det=document.getElementById('detail'); const box=document.getElementById('detailContent');
   const txt=(c.body[state.lang]&&c.body[state.lang].trim())?c.body[state.lang]:c.body.zh;
   let html=txt.replace(/\n\n/g,'</p><p>').replace(/\n/g,'<br>');
@@ -217,19 +231,22 @@ function openDetail(c){
   html=html.replace(/变量道\s*·\s*道证|Variable Dao\s*·\s*Evidence|変数道・証|변수도\s*·\s*증거/g,'</p><div class="pill">道证</div><p>');
   html=html.replace(/变量道\s*·\s*觉悟|Variable Dao\s*·\s*Insight|変数道・悟り|변수도\s*·\s*깨달음/g,'</p><div class="pill">觉悟</div><p>');
   box.innerHTML=`<h2>${t(c.title)}</h2><div class="muted">${t(c.sting)} · ${t(c.ask)}</div><div class="long"><p>${html}</p></div>`;
-  det.classList.add('active'); det.setAttribute('aria-hidden','false'); det.scrollIntoView({behavior:'smooth'});
+  det.classList.add('active'); det.setAttribute('aria-hidden','false');
+  if(doScroll) det.scrollIntoView({behavior:'smooth', block:'start'});
 }
 
 // ====== 事件绑定 ======
 document.getElementById('startBtn').addEventListener('click',()=>{
-  // 严格按文档：点击笔 -> 进入“选卡页面”
+  // 点击笔 -> 进入“选卡页面”
   state.step=2;
-  showPage('select');
-  renderList();
+  showPage('select'); renderUIStrings(); renderList();
   document.getElementById('selectTitle').scrollIntoView({behavior:'smooth'});
 });
 document.getElementById('selBack').addEventListener('click',()=>{
   state.step=1; showPage('landing');
+  // 关闭详情
+  document.getElementById('detail').classList.remove('active');
+  document.getElementById('detail').setAttribute('aria-hidden','true');
 });
 document.getElementById('backToSelect').addEventListener('click',()=>{
   document.getElementById('detail').classList.remove('active');
@@ -237,7 +254,7 @@ document.getElementById('backToSelect').addEventListener('click',()=>{
   document.getElementById('selectTitle').scrollIntoView({behavior:'smooth'});
 });
 
-// 顶部“首页/故事/关于我们”只是占位导航（不绕过第1步的主入口）
+// 顶部“首页/故事/关于我们”作为占位导航
 document.getElementById('navHome').addEventListener('click',()=>showPage('landing'));
 document.getElementById('navStories').addEventListener('click',()=>showPage('stories'));
 document.getElementById('navAbout').addEventListener('click',()=>showPage('about'));
@@ -249,7 +266,11 @@ langSel.addEventListener('change',(e)=>{
   const v=e.target.value; if(!v) return;
   state.lang=v; localStorage.setItem('vd_lang',v); localStorage.setItem('vd_lang_selected','1');
   const ph=langSel.querySelector('option[data-placeholder]'); if(ph) ph.remove();
-  renderList(); // 选卡页的文案刷新
+  // 刷新当前页面的文案
+  if(state.step===2){ renderUIStrings(); renderList(); }
+  if(document.getElementById('detail').classList.contains('active') && state.currentCard){
+    openDetail(state.currentCard,false); // 仅刷新，不滚动
+  }
 });
 
 // 初始：只显示 Step1
