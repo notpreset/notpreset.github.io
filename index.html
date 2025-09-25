@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Variable Dao — 单文件（全局多语言修复）</title>
+<title>Variable Dao — 单文件（含页脚多语言）</title>
 <style>
   :root{--maxw:900px;--pad:16px;--accent:#2b6df6;--stickyTop:60px}
   *{box-sizing:border-box}
@@ -14,12 +14,10 @@
   select.chip{font-size:13px; padding:6px 10px; min-width:86px; max-width:120px}
   .grow{flex:1}
   main{max-width:var(--maxw);margin:0 auto;padding:0 var(--pad)}
-  /* Step 1 */
   .hero{max-width:720px;margin:12vh auto 10vh;text-align:center}
   .h1{font-weight:900;font-size:clamp(28px,5.2vw,44px);margin:6px 0 10px}
   .lead{color:rgba(0,0,0,.75);font-size:16px;margin:8px 0 18px}
   .btn{display:inline-block;padding:12px 18px;border-radius:12px;border:1px solid rgba(0,0,0,.08);cursor:pointer;font-weight:700}
-  /* Step 2 selection */
   .page{display:none}
   #select{max-width:760px;margin:8vh auto 14vh}
   .sel-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
@@ -28,11 +26,10 @@
   .card{border:1px solid rgba(0,0,0,.08);border-radius:14px;padding:12px;background:#fff}
   .card h3{margin:6px 0;font-size:18px}
   .muted{opacity:.7;font-size:14px}
-  /* detail view inside select */
   #detail{display:none;margin-top:12px}
   #detail.active{display:block}
   #detail .content{padding:16px;border-radius:12px;border:1px solid rgba(0,0,0,.08);background:#fff}
-  .back{position:sticky; top:var(--stickyTop); z-index:15; margin:0 0 12px;display:inline-flex;align-items:center;gap:6px;padding:8px 12px;border:1px solid rgba(0,0,0,.08);border-radius:999px;background:#fff;cursor:pointer}
+  .back{position:sticky; top:60px; z-index:15; margin:0 0 12px;display:inline-flex;align-items:center;gap:6px;padding:8px 12px;border:1px solid rgba(0,0,0,.08);border-radius:999px;background:#fff;cursor:pointer}
   .pill{display:inline-block;padding:8px 12px;border-radius:999px;background:#f3f6ff;font-weight:800;margin:10px 0}
   .long{font-size:18px;line-height:1.9;color:#111}
   footer{max-width:var(--maxw);margin:0 auto 26px;padding:0 var(--pad);color:rgba(0,0,0,.6);font-size:13px;text-align:center}
@@ -66,7 +63,6 @@
 </header>
 
 <main>
-  <!-- Step 1 -->
   <section id="landing" class="page" style="display:block">
     <div class="hero">
       <div class="h1" id="heroTitle"></div>
@@ -75,21 +71,18 @@
     </div>
   </section>
 
-  <!-- Step 2 (only visible after clicking the pen button) -->
   <section id="select" class="page">
     <div class="sel-head">
       <div class="sel-title" id="selectTitle"></div>
       <button class="chip" id="selBack"></button>
     </div>
     <div class="cards" id="cardsList"></div>
-    <!-- detail lives inside select page -->
     <div id="detail" aria-hidden="true">
       <button class="back" id="backToSelect"></button>
       <div class="content" id="detailContent"></div>
     </div>
   </section>
 
-  <!-- placeholders for nav -->
   <section id="stories" class="page">
     <div class="card"><strong id="storiesTitle"></strong><p class="muted" id="storiesHint"></p></div>
   </section>
@@ -101,38 +94,35 @@
   </section>
 </main>
 
-<footer>© 2025 变量道 · 让世界成为可书写的素材。</footer>
+<footer><span id="footerText"></span></footer>
 
 <script>
-// ====== 多语言 UI 文案 ======
 const UI = {
-  // nav
   navHome:   { zh:'首页',   en:'Home',   ja:'ホーム',    ko:'홈' },
   navStories:{ zh:'故事',   en:'Stories',ja:'ストーリー',ko:'스토리' },
   navAbout:  { zh:'关于我们', en:'About',  ja:'紹介',      ko:'소개' },
-  // hero
   heroTitle: { zh:'变量道 · 心理自救', en:'Variable Dao · Self-Rescue', ja:'変数道・心理セルフレスキュー', ko:'변수도 · 심리 자기구원' },
   heroLead:  { zh:'他们给你故事， 你只被分配到角色。 我们给你笔。', 
                en:'They hand you stories, assigning you a role. We hand you the pen.',
                ja:'彼らはあなたに物語を与え、役だけを割り当てる。私たちはペンを渡す。',
                ko:'사람들은 당신에게 이야기를 주고, 역할만 배정한다. 우리는 펜을 건넨다.' },
   start:     { zh:'我来执笔', en:'I will write', ja:'私が書く', ko:'내가 집필한다' },
-  // select page
   selectTitle:{ zh:'“看到哪条让你想爆粗口，就点它。”', en:'“Tap the line that makes you want to swear.”', ja:'「一番ムカつく一文をタップ。」', ko:'“욕이 튀어나오게 하는 줄을 탭하세요.”' },
   backHome:   { zh:'← 返回首页', en:'← Back to Home', ja:'← ホームへ戻る', ko:'← 홈으로' },
   backSelect: { zh:'← 返回选卡', en:'← Back to list', ja:'← 選択へ戻る', ko:'← 목록으로' },
-  // placeholders
   storiesTitle:{ zh:'故事', en:'Stories', ja:'ストーリー', ko:'스토리' },
   storiesHint:{ zh:'内容正在搭建中，敬请期待。', en:'Content under construction.', ja:'構築中です。', ko:'준비 중입니다.' },
   aboutTitle:{ zh:'关于我们（预览）', en:'About (Preview)', ja:'紹介（プレビュー）', ko:'소개(미리보기)' },
   aboutHint:{ zh:'声明、我们的立场与发起人介绍将在最终版完整展示。', en:'Statement, stance and founders will appear in the full release.', ja:'声明・立場・発起人紹介は正式版で公開します。', ko:'성명, 입장, 발기인 소개는 정식판에 공개됩니다.' },
-  // pills
   pillBone:   { zh:'道骨', en:'Bone', ja:'骨', ko:'뼈' },
   pillEvi:    { zh:'道证', en:'Evidence', ja:'証', ko:'증거' },
-  pillInsight:{ zh:'觉悟', en:'Insight', ja:'悟り', ko:'깨달음' }
+  pillInsight:{ zh:'觉悟', en:'Insight', ja:'悟り', ko:'깨달음' },
+  footer:     { zh:'© 2025 变量道 · 让世界成为可书写的素材。',
+                en:'© 2025 Variable Dao · Let the world become material for writing.',
+                ja:'© 2025 変数道 ・ 世界を「書ける素材」に。',
+                ko:'© 2025 변수도 · 세상을 글로 쓸 수 있는 재료로.' }
 };
 
-// ====== 数据（仅一张卡：当空气）======
 const DATA = {
   cards: [{
     id: "air",
@@ -288,7 +278,6 @@ B의 이야기는 다른 판본:
   }]
 };
 
-// ====== 状态 & 语言 ======
 const state = { 
   lang: (new URL(location.href)).searchParams.get('lang') || localStorage.getItem('vd_lang') || (navigator.language||'en').slice(0,2),
   step: 1,
@@ -296,93 +285,89 @@ const state = {
 };
 function t(o){ return o[state.lang] || o.zh || ''; }
 
-// ====== 渲染函数 ======
 function showPage(id){
   document.querySelectorAll('.page').forEach(p=>p.style.display='none');
   document.getElementById(id).style.display='block';
 }
 function renderNav(){
-  document.getElementById('navHome').textContent    = t(UI.navHome);
-  document.getElementById('navStories').textContent = t(UI.navStories);
-  document.getElementById('navAbout').textContent   = t(UI.navAbout);
+  navHome.textContent    = t(UI.navHome);
+  navStories.textContent = t(UI.navStories);
+  navAbout.textContent   = t(UI.navAbout);
 }
 function renderHome(){
-  document.getElementById('heroTitle').textContent = t(UI.heroTitle);
-  document.getElementById('heroLead').textContent  = t(UI.heroLead);
-  document.getElementById('startLabel').textContent= t(UI.start);
+  heroTitle.textContent = t(UI.heroTitle);
+  heroLead.textContent  = t(UI.heroLead);
+  startLabel.textContent= t(UI.start);
 }
 function renderSelectUI(){
-  document.getElementById('selectTitle').textContent = t(UI.selectTitle);
-  document.getElementById('selBack').textContent     = t(UI.backHome);
-  document.getElementById('backToSelect').textContent= t(UI.backSelect);
+  selectTitle.textContent = t(UI.selectTitle);
+  selBack.textContent     = t(UI.backHome);
+  backToSelect.textContent= t(UI.backSelect);
 }
 function renderPlaceholders(){
-  document.getElementById('storiesTitle').textContent = t(UI.storiesTitle);
-  document.getElementById('storiesHint').textContent  = t(UI.storiesHint);
-  document.getElementById('aboutTitle').textContent   = t(UI.aboutTitle);
-  document.getElementById('aboutHint').textContent    = t(UI.aboutHint);
+  storiesTitle.textContent = t(UI.storiesTitle);
+  storiesHint.textContent  = t(UI.storiesHint);
+  aboutTitle.textContent   = t(UI.aboutTitle);
+  aboutHint.textContent    = t(UI.aboutHint);
+}
+function renderFooter(){
+  footerText.textContent = t(UI.footer);
 }
 function renderList(){
-  const list = document.getElementById('cardsList'); list.innerHTML='';
+  cardsList.innerHTML='';
   DATA.cards.forEach(c=>{
     const el=document.createElement('div'); el.className='card';
     el.innerHTML=`<div class="muted">${t(c.sting)}</div><h3>${t(c.title)}</h3><div class="muted">${t(c.ask)}</div>`;
     el.addEventListener('click',()=>openDetail(c,true));
-    list.appendChild(el);
+    cardsList.appendChild(el);
   });
 }
 function openDetail(c, doScroll){
   state.currentCard = c;
-  const det=document.getElementById('detail'); const box=document.getElementById('detailContent');
   const txt=(c.body[state.lang]&&c.body[state.lang].trim())?c.body[state.lang]:c.body.zh;
   let html=txt.replace(/\n\n/g,'</p><p>').replace(/\n/g,'<br>');
-  // localized pill labels
   html=html.replace(/变量道\s*·\s*道骨|Variable Dao\s*·\s*Bone|変数道・骨|변수도\s*·\s*뼈/g, '</p><div class="pill">'+t(UI.pillBone)+'</div><p>');
   html=html.replace(/变量道\s*·\s*道证|Variable Dao\s*·\s*Evidence|変数道・証|변수도\s*·\s*증거/g, '</p><div class="pill">'+t(UI.pillEvi)+'</div><p>');
   html=html.replace(/变量道\s*·\s*觉悟|Variable Dao\s*·\s*Insight|変数道・悟り|변수도\s*·\s*깨달음/g, '</p><div class="pill">'+t(UI.pillInsight)+'</div><p>');
-  box.innerHTML=`<h2>${t(c.title)}</h2><div class="muted">${t(c.sting)} · ${t(c.ask)}</div><div class="long"><p>${html}</p></div>`;
-  det.classList.add('active'); det.setAttribute('aria-hidden','false');
-  if(doScroll) det.scrollIntoView({behavior:'smooth', block:'start'});
+  detailContent.innerHTML=`<h2>${t(c.title)}</h2><div class="muted">${t(c.sting)} · ${t(c.ask)}</div><div class="long"><p>${html}</p></div>`;
+  detail.classList.add('active'); detail.setAttribute('aria-hidden','false');
+  if(doScroll) detail.scrollIntoView({behavior:'smooth', block:'start'});
 }
 
-// ====== 事件绑定 ======
-document.getElementById('startBtn').addEventListener('click',()=>{
+startBtn.addEventListener('click',()=>{
   state.step=2; showPage('select'); renderSelectUI(); renderList();
-  document.getElementById('selectTitle').scrollIntoView({behavior:'smooth'});
+  selectTitle.scrollIntoView({behavior:'smooth'});
 });
-document.getElementById('selBack').addEventListener('click',()=>{
+selBack.addEventListener('click',()=>{
   state.step=1; showPage('landing');
-  document.getElementById('detail').classList.remove('active');
-  document.getElementById('detail').setAttribute('aria-hidden','true');
+  detail.classList.remove('active');
+  detail.setAttribute('aria-hidden','true');
 });
-document.getElementById('backToSelect').addEventListener('click',()=>{
-  document.getElementById('detail').classList.remove('active');
-  document.getElementById('detail').setAttribute('aria-hidden','true');
-  document.getElementById('selectTitle').scrollIntoView({behavior:'smooth'});
+backToSelect.addEventListener('click',()=>{
+  detail.classList.remove('active');
+  detail.setAttribute('aria-hidden','true');
+  selectTitle.scrollIntoView({behavior:'smooth'});
 });
 
-document.getElementById('navHome').addEventListener('click',()=>showPage('landing'));
-document.getElementById('navStories').addEventListener('click',()=>showPage('stories'));
-document.getElementById('navAbout').addEventListener('click',()=>showPage('about'));
+navHome.addEventListener('click',()=>showPage('landing'));
+navStories.addEventListener('click',()=>showPage('stories'));
+navAbout.addEventListener('click',()=>showPage('about'));
 
-// 语言切换（占位 -> 选择后记忆）
 const langSel=document.getElementById('langSelect');
 if(!localStorage.getItem('vd_lang_selected')){ langSel.value=""; } else { langSel.value=state.lang; }
 langSel.addEventListener('change',(e)=>{
   const v=e.target.value; if(!v) return;
   state.lang=v; localStorage.setItem('vd_lang',v); localStorage.setItem('vd_lang_selected','1');
   const ph=langSel.querySelector('option[data-placeholder]'); if(ph) ph.remove();
-  // 全量刷新可视区域
-  renderNav(); renderHome(); renderPlaceholders();
+  renderNav(); renderHome(); renderPlaceholders(); renderFooter();
   if(state.step===2){ renderSelectUI(); renderList(); }
-  if(document.getElementById('detail').classList.contains('active') && state.currentCard){
+  if(detail.classList.contains('active') && state.currentCard){
     openDetail(state.currentCard,false);
   }
 });
 
-// ====== 初始渲染 ======
 if(!['zh','en','ja','ko'].includes(state.lang)) state.lang='en';
-renderNav(); renderHome(); renderPlaceholders();
+renderNav(); renderHome(); renderPlaceholders(); renderFooter();
 showPage('landing');
 </script>
 </body>
