@@ -1,96 +1,306 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Variable Dao</title>
-  <style>
-    body { font-family: sans-serif; margin:0; padding:0; line-height:1.6; }
-    nav { display: flex; justify-content: space-between; padding: 0.5em 1em; background:#f0f0f0; position:sticky; top:0; overflow-x:auto; }
-    nav a { margin: 0 0.5em; text-decoration: none; }
-    .hero { text-align: center; padding: 2em; }
-    .hero h1 { font-size: 2em; }
-    .button { display:inline-block; padding:0.8em 1.2em; margin-top:1em; border:1px solid black; border-radius:5px; cursor:pointer; }
-    .card { border:1px solid #ddd; border-radius:8px; padding:1em; margin:1em; }
-    .detail { font-size:18px; line-height:1.9; padding:1.5em; }
-    .pill { display:inline-block; background:#eee; padding:0.3em 0.8em; margin:1em 0; border-radius:15px; font-weight:bold; }
-  </style>
-  <script>
-    const translations = {
-      "zh": { nav:["首页","故事","关于我们"], heroTitle:"变量道 · 心理自救", heroSlogan:"他们给你故事...", heroBtn:"我来执笔", pills:{story:"故事", dao:"道骨", proof:"道证", enlight:"觉悟"} },
-      "en": { nav:["Home","Stories","About"], heroTitle:"Variable Dao · Self-Rescue", heroSlogan:"They give you a story...", heroBtn:"I will write", pills:{story:"Story", dao:"Dao Bone", proof:"Dao Proof", enlight:"Enlightenment"} },
-      "ja": { nav:["ホーム","ストーリー","紹介"], heroTitle:"変数道 · セルフレスキュー", heroSlogan:"彼らはあなたに物語を...", heroBtn:"私が書く", pills:{story:"物語", dao:"道骨", proof:"道証", enlight:"覚悟"} },
-      "ko": { nav:["홈","스토리","소개"], heroTitle:"변수도 · 자기구원", heroSlogan:"그들은 당신에게 이야기를...", heroBtn:"내가 쓴다", pills:{story:"스토리", dao:"도골", proof:"도증", enlight:"각오"} }
-    };
-    let userChosenLang = localStorage.getItem("lang");
-    function switchLang(lang){
-      localStorage.setItem("lang",lang);
-      userChosenLang = lang;
-      const t = translations[lang];
-      document.getElementById("hero-title").innerText = t.heroTitle;
-      document.getElementById("hero-slogan").innerText = t.heroSlogan;
-      document.getElementById("hero-button").innerText = t.heroBtn;
-      const navLinks = document.querySelectorAll(".nav-link");
-      for(let i=0;i<navLinks.length;i++){ navLinks[i].innerText = t.nav[i]; }
-      // update pills if visible
-      document.querySelectorAll("[data-pill]").forEach(el=>{
-        el.innerText = t.pills[el.dataset.pill];
-      });
-      updateLangSelect();
-    }
-    function updateLangSelect(){
-      const sel = document.getElementById("lang-select");
-      sel.innerHTML="";
-      const current = userChosenLang || "Language";
-      const optionCurrent = document.createElement("option");
-      optionCurrent.value=current;
-      optionCurrent.innerText=current==="Language"?"Language":translations[current].nav[0]==="首页"?"中文":translations[current].nav[0];
-      sel.appendChild(optionCurrent);
-      for(let key in translations){
-        if(key!==current){
-          const opt=document.createElement("option");
-          opt.value=key; opt.innerText=key==="zh"?"中文":key==="en"?"English":key==="ja"?"日本語":"한국어";
-          sel.appendChild(opt);
-        }
-      }
-    }
-    window.onload=function(){
-      let lang = new URLSearchParams(window.location.search).get("lang")||localStorage.getItem("lang")||(navigator.language||"en").substring(0,2);
-      if(!translations[lang]) lang="en";
-      if(!userChosenLang) userChosenLang="Language";
-      switchLang(lang);
-    };
-  </script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Variable Dao — 单文件预览（首页+当空气）</title>
+<style>
+  :root{--maxw:980px;--pad:16px;--accent:#2b6df6}
+  *{box-sizing:border-box}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;margin:0;color:#111;background:#fff;line-height:1.65}
+  header{position:sticky;top:0;background:rgba(255,255,255,.92);padding:8px 12px;border-bottom:1px solid rgba(0,0,0,.06);z-index:10;display:flex;align-items:center;gap:12px;overflow:auto}
+  .nav-left{display:flex;gap:10px;align-items:center}
+  .chip{padding:8px 12px;border-radius:999px;border:1px solid rgba(0,0,0,.08);background:transparent;cursor:pointer;white-space:nowrap}
+  .grow{flex:1}
+  main{max-width:900px;margin:22px auto;padding:0 var(--pad)}
+  .hero{padding:6px 0 18px;text-align:center}
+  .h1{font-weight:900;font-size:clamp(28px,5vw,44px);margin:6px 0}
+  .lead{color:rgba(0,0,0,.75);font-size:16px;margin:8px 0 16px}
+  .btn{display:inline-block;padding:12px 18px;border-radius:12px;border:1px solid rgba(0,0,0,.08);cursor:pointer;font-weight:700}
+  .cards{display:grid;gap:14px;margin-top:8px}
+  .card{border:1px solid rgba(0,0,0,.08);border-radius:14px;padding:12px;background:#fff}
+  .card h3{margin:6px 0;font-size:18px}
+  .muted{opacity:.7;font-size:14px}
+  /* detail view */
+  .detail{display:none;margin-top:12px}
+  .detail.active{display:block}
+  .detail .content{padding:16px;border-radius:12px;border:1px solid rgba(0,0,0,.08);background:#fff}
+  .pill{display:inline-block;padding:8px 12px;border-radius:999px;background:#f3f6ff;font-weight:800;margin:10px 0}
+  .long{font-size:18px;line-height:1.9;color:#111}
+  footer{max-width:900px;margin:40px auto;padding:0 var(--pad);color:rgba(0,0,0,.6);font-size:13px;text-align:center}
+  @media (prefers-color-scheme:dark){
+    body{background:#050507;color:#e9e9ee}
+    header{background:rgba(5,5,7,.6);border-bottom:1px solid rgba(255,255,255,.06)}
+    .card,.detail .content{background:#0e0e11;border-color:#26262b}
+    .pill{background:#132032;color:#e8f2ff}
+  }
+</style>
 </head>
 <body>
-  <nav>
-    <div>
-      <a href="#" class="nav-link">首页</a>
-      <a href="#" class="nav-link">故事</a>
-      <a href="#" class="nav-link">关于我们</a>
+<header>
+  <div class="nav-left">
+    <button class="chip nav-link" data-target="home">首页</button>
+    <button class="chip nav-link" data-target="stories">故事</button>
+    <button class="chip nav-link" data-target="about">关于我们</button>
+  </div>
+  <div class="grow"></div>
+  <select id="layoutSelect" class="chip" title="layout">
+    <option value="mobile">📱 Mobile</option>
+    <option value="desktop">🖥 Desktop</option>
+  </select>
+  <select id="langSelect" class="chip" title="language">
+    <option value="" data-placeholder>Language</option>
+    <option value="zh">中文</option>
+    <option value="en">EN</option>
+    <option value="ja">日本語</option>
+    <option value="ko">한국어</option>
+  </select>
+</header>
+
+<main>
+  <section id="home" class="page" style="display:block">
+    <div class="hero">
+      <div class="h1" id="heroTitle">变量道 · 心理自救</div>
+      <div class="lead" id="heroLead">他们给你故事，你只被分配到角色。我们给你笔。</div>
+      <button id="startBtn" class="btn">我来执笔</button>
     </div>
-    <div>
-      <select id="layout-select">
-        <option>Mobile</option>
-        <option>Desktop</option>
-      </select>
-      <select id="lang-select" onchange="switchLang(this.value)"></select>
+
+    <div class="cards" id="cardsList">
+      <!-- 卡片将被插入 -->
     </div>
-  </nav>
-  <section class="hero">
-    <h1 id="hero-title"></h1>
-    <p id="hero-slogan"></p>
-    <div id="hero-button" class="button"></div>
+
+    <div id="detail" class="detail" aria-hidden="true">
+      <div class="content" id="detailContent"></div>
+    </div>
   </section>
-  <section class="detail">
-    <div class="pill" data-pill="story"></div>
-    <p>这里是故事正文示例...</p>
-    <div class="pill" data-pill="dao"></div>
-    <p>这里是道骨段落示例...</p>
-    <div class="pill" data-pill="proof"></div>
-    <p>这里是道证段落示例...</p>
-    <div class="pill" data-pill="enlight"></div>
-    <p>这里是觉悟段落示例...</p>
+
+  <section id="stories" class="page" style="display:none">
+    <div class="card"><strong>故事</strong><p class="muted">内容正在搭建中，敬请期待。</p></div>
   </section>
+
+  <section id="about" class="page" style="display:none">
+    <div class="card"><strong>关于我们（预览）</strong>
+      <p class="muted">声明、我们的立场与发起人介绍将在最终版完整展示。</p>
+    </div>
+  </section>
+</main>
+
+<footer>© 2025 变量道 · 让世界成为可书写的素材。</footer>
+
+<script>
+// ====== 单文件内置数据（第一张卡片：当空气）======
+const DATA = {
+  cards: [{
+    id: "air",
+    title: { zh: "当空气", en: "Invisible", ja: "空気になる", ko: "공기 취급" },
+    sting: { zh: "我在，你们当没看见。", en: "I'm here, and you act like you can't see me.", ja: "私はここにいるのに、誰も見ない。", ko: "나는 여기 있는데, 다들 못 본 척한다." },
+    ask:   { zh: "谁把我当透明人？", en: "Who treats me like I'm transparent?", ja: "誰が私を透明人間にしている？", ko: "누가 나를 투명인간으로 취급하나?" },
+    body: {
+      zh: `短篇｜《两个人影》
+
+同一间教室里，有两个人影：A 和 B。
+老师点名老漏、分组没人喊、举手没人看——他们都像空气。
+黑板擦过一遍又一遍，他们的名字一次也没留下。
+
+A 的故事这样写：
+“乖一点，不添麻烦；用成绩说话；总有一天会被看到。”
+于是他更安静，坐得更直。
+一个月后，他开始怀疑：是不是我真的不重要。
+他没错——安静、礼貌、克制都对；
+但他的生命像被按了静音键，灯永远不会主动打到他身上。
+
+B 的故事是另一个版本：
+“既然没人看见，那我先让世界听到一声响。”
+做广播体操时，他故意慢半拍或夸张地做错动作，引得旁边的同学笑场
+他会去广播站把班级球赛剪了段“假正经解说”在下课时用教学设备放映，
+年级主任皱眉：“别闹。”
+但全班开始叫他“解说员”。
+他也没错——调皮、出戏、被批评都对；
+可他从“空气”变成了可被叫到的人。
+
+变量道 · 道骨
+🦴确认感（I exist for someone）
+🦴人不只是要“我存在”，而是“我的存在被看见”。
+🦴被爱、被骂都行，人最怕是彻底的无视。
+
+变量道 · 道证
+• A 被困在“等别人给我一个角色”的故事里。
+• B 把“我是谁”提前，先丢下一个响亮的记号（外号、段子、被点名的理由）。
+• 两种逻辑都对：A 的守规则对，B 的要回叙事权也对。
+既然都对，就活在那个更有生命力、更快乐的“对”里。
+
+变量道 · 觉悟
+被看见，是人类的底层燃料。
+不是求爱，不是求骂，是在别人的世界里钉下一枚“这是我”的小图钉。
+从“空气”到“被叫到名字”，新的故事就开始了。`,
+      en: `Short · "Two Silhouettes"
+
+In the same classroom sat two silhouettes: A and B.
+Roll calls kept skipping them. No one called them into groups. Raised hands went unseen—they were like air.
+The blackboard was wiped again and again, and their names never stayed.
+
+A’s story goes like this:
+“Be good. Don’t cause trouble. Let grades speak. One day I’ll be seen.”
+So he sat even straighter, even quieter.
+A month later, he began to suspect: maybe I really don’t matter.
+He wasn’t wrong—quiet, polite, restrained are all “right,”
+but life felt like the mute button was pressed; the light would never turn to him on its own.
+
+B’s story is another version:
+“If no one sees me, I’ll at least make a sound.”
+During morning exercise he deliberately went half a beat off, exaggerated a move, made classmates laugh.
+He cut a mock-serious commentary of the class game and played it through the school system after class.
+The dean frowned: “Cut it out.”
+But the class started calling him “the commentator.”
+He wasn’t wrong either—mischievous, off-script, even scolded—yet he transformed from “air” to someone who gets called by name.
+
+Variable Dao · Bone
+🦴 Sense of confirmation (I exist for someone)
+🦴 Humans need not only “I exist,” but “my existence is seen.”
+🦴 Praise or scold—both beat being ignored.
+
+Variable Dao · Evidence
+• A is trapped in the story “wait for someone to give me a role.”
+• B moves “who I am” up front and drops a loud marker (nickname, gag, a reason to be called).
+• Both logics are right. So live in the version that’s more alive and joyful.
+
+Variable Dao · Insight
+To be seen is human fuel at the base layer.
+You’re not begging love or insult; you’re pinning “this is me” in someone else’s world.
+From “air” to “being called by name,” a new story begins.`,
+      ja: `短編｜「二つの影」
+
+同じ教室に、A と B という二つの影がいた。
+点呼では飛ばされ、グループ分けでも誰にも呼ばれず、手を挙げても見られない——まるで空気。
+黒板は何度も拭かれるのに、彼らの名前が残ることは一度もなかった。
+
+A の物語：
+「大人しく、迷惑をかけない。成績で語る。いつかきっと見られる。」
+彼はさらに静かに、さらに背筋を伸ばす。
+一か月後、彼は疑い始める——本当に自分は重要ではないのか？
+間違ってはいない。静か、礼儀正しい、克己——すべて正しい。
+だが彼の人生はミュートされたようで、スポットライトは決して自ら彼を照らさない。
+
+B の物語は別の版：
+「誰も見ないなら、とにかく世界に音を立てよう。」
+体操で半拍ずらしや誇張した動きをわざと入れ、周りを笑わせる。
+クラスの試合を“もっともらしい実況”に編集し、休み時間に校内放送で流す。
+学年主任は眉をひそめる。「ふざけるな。」
+だがクラスは彼を「実況くん」と呼び始めた。
+それも間違いではない——やんちゃ、出過ぎ、叱られる——すべて“正しい”。
+彼は「空気」から「名指しされる人」へと変わったのだ。
+
+変数道・骨
+🦴 確認感（誰かのために私は存在する）
+🦴 「私は存在する」だけでなく、「私の存在が見られる」こと。
+🦴 愛されるでも叱られるでもよい。最も恐ろしいのは完全な無視。
+
+変数道・証
+• A は「誰かが役をくれるのを待つ」物語に囚われている。
+• B は「自分は誰か」を前に出し、あだ名やネタなどの強いマーカーを置いた。
+• どちらの論理も正しい。ならば、より生き生きして楽しく生きられる“正しい”を選べばいい。
+
+変数道・悟り
+見られることは、人間の底層の燃料だ。
+愛や罵倒を求めるのではない。他者の世界に「これは私だ」というピンを打つこと。
+「空気」から「名指し」へ——新しい物語が始まる。`,
+      ko: `단편｜〈두 개의 그림자〉
+
+같은 교실에 A와 B, 두 개의 그림자가 있었다.
+호명에서도 빠지고, 조 편성에서도 아무도 부르지 않고, 손을 들어도 보지 않는다 — 마치 공기.
+칠판은 여러 번 지워지지만, 그들의 이름은 한 번도 남지 않았다.
+
+A의 이야기:
+“얌전하게, 폐 끼치지 말자. 성적으로 말하자. 언젠가 보게 될 거야.”
+그래서 그는 더 조용해지고 더 바르게 앉았다.
+한 달 뒤 그는 의심하기 시작한다. ‘나는 정말 중요하지 않은가?’
+그는 틀리지 않았다 — 조용함, 예의, 절제는 다 옳다.
+하지만 그의 삶은 음소거된 듯했고, 조명은 결코 스스로 그를 비추지 않았다.
+
+B의 이야기는 다른 판본:
+“아무도 보지 않는다면, 일단 세상에 소리를 내자.”
+체조 시간에 일부러 반 박 늦거나 과장된 동작을 해 옆 친구들을 웃긴다.
+반 경기 영상을 “진지한 척 해설”로 편집해 쉬는 시간에 방송 장비로 틀었다.
+학년 주임은 찡그렸다. “장난치지 마.”
+하지만 반은 그를 “해설가”라 부르기 시작했다.
+이것도 틀리지 않았다 — 장난, 과잉, 꾸지람 — 모두 옳다.
+그는 “공기”에서 “이름 불리는 사람”으로 변했다.
+
+변수도 · 뼈
+🦴 확인감(I exist for someone)
+🦴 단지 “존재한다”가 아니라 “나의 존재가 보인다”는 것.
+🦴 사랑이든 꾸짖음이든 좋다. 가장 두려운 것은 완전한 무시다.
+
+변수도 · 증거
+• A는 “누군가가 역할을 줄 때까지 기다려라”는 이야기에 갇혀 있다.
+• B는 “나는 누구인가”를 앞에 두고, 별명·농담·호명될 이유 같은 큰 표식을 남겼다.
+• 둘 다 옳다. 그러니 더 생기가 있고 더 즐거운 ‘옳음’ 속에서 살아라.
+
+변수도 · 깨달음
+보이는 것은 인간의 바닥 연료다.
+사랑이나 욕을 구하는 게 아니라, 타인의 세계에 “이것이 나다”라는 핀을 꽂는 일.
+“공기”에서 “이름 불림”으로 — 새로운 이야기가 시작된다.`
+    }
+  }]
+};
+
+// ====== 语言与导航逻辑（简化版，满足你当前复制需求）======
+const state = { 
+  lang: (new URL(location.href)).searchParams.get('lang') || localStorage.getItem('vd_lang') || (navigator.language||'en').slice(0,2),
+  layout: localStorage.getItem('vd_layout') || 'mobile'
+};
+
+function t(obj){ return obj[state.lang] || obj['zh'] || ''; }
+
+function renderCards(){
+  const wrap = document.getElementById('cardsList'); wrap.innerHTML='';
+  DATA.cards.forEach(c=>{
+    const el=document.createElement('div'); el.className='card';
+    el.innerHTML = `<div class="muted">${t(c.sting)}</div><h3>${t(c.title)}</h3><div class="muted">${t(c.ask)}</div>`;
+    el.addEventListener('click', ()=>openDetail(c));
+    wrap.appendChild(el);
+  });
+}
+function openDetail(c){
+  const det=document.getElementById('detail'); const box=document.getElementById('detailContent');
+  const txt=(c.body[state.lang]&&c.body[state.lang].trim())?c.body[state.lang]:c.body.zh;
+  // 加入分割 pill（故事/道骨/道证/觉悟）
+  let html = txt.replace(/
+
+/g,'</p><p>').replace(/
+/g,'<br>');
+  html = html.replace(/变量道\s*·\s*道骨|Variable Dao\s*·\s*Bone|変数道・骨|변수도\s*·\s*뼈/g,'</p><div class="pill">道骨</div><p>');
+  html = html.replace(/变量道\s*·\s*道证|Variable Dao\s*·\s*Evidence|変数道・証|변수도\s*·\s*증거/g,'</p><div class="pill">道证</div><p>');
+  html = html.replace(/变量道\s*·\s*觉悟|Variable Dao\s*·\s*Insight|変数道・悟り|변수도\s*·\s*깨달음/g,'</p><div class="pill">觉悟</div><p>');
+  box.innerHTML = `<h2>${t(c.title)}</h2><div class="muted">${t(c.sting)} · ${t(c.ask)}</div><div class="long"><p>${html}</p></div>`;
+  det.classList.add('active'); det.setAttribute('aria-hidden','false'); det.scrollIntoView({behavior:'smooth'});
+}
+
+document.getElementById('startBtn').addEventListener('click', ()=>{ document.getElementById('home').scrollIntoView({behavior:'smooth'}); });
+document.querySelectorAll('.nav-link').forEach(btn=>btn.addEventListener('click', (e)=>{
+  const target = e.currentTarget.dataset.target;
+  document.querySelectorAll('.page').forEach(p=>p.style.display='none');
+  document.getElementById(target).style.display='block';
+  document.getElementById('detail').classList.remove('active');
+}));
+
+// 语言选择：默认先显示 Language，占位；用户选择后记忆
+const langSel=document.getElementById('langSelect');
+if(!localStorage.getItem('vd_lang_selected')){ langSel.value=""; } else { langSel.value=state.lang; }
+langSel.addEventListener('change',(e)=>{
+  const v=e.target.value; if(!v) return;
+  state.lang=v; localStorage.setItem('vd_lang',v); localStorage.setItem('vd_lang_selected','1');
+  const ph=langSel.querySelector('option[data-placeholder]'); if(ph) ph.remove();
+  langSel.value=v; renderCards();
+});
+
+document.getElementById('layoutSelect').addEventListener('change',(e)=>{
+  state.layout=e.target.value; localStorage.setItem('vd_layout',state.layout);
+});
+
+// 初始渲染
+if(!['zh','en','ja','ko'].includes(state.lang)) state.lang='en';
+renderCards();
+</script>
 </body>
 </html>
