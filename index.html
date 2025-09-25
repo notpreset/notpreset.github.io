@@ -5,19 +5,20 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Variable Dao — 单文件预览（首页+当空气）</title>
 <style>
-  :root{--maxw:980px;--pad:16px;--accent:#2b6df6}
+  :root{--maxw:900px;--pad:16px;--accent:#2b6df6}
   *{box-sizing:border-box}
   body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;margin:0;color:#111;background:#fff;line-height:1.65}
-  header{position:sticky;top:0;background:rgba(255,255,255,.92);padding:8px 12px;border-bottom:1px solid rgba(0,0,0,.06);z-index:10;display:flex;align-items:center;gap:12px;overflow:auto}
-  .nav-left{display:flex;gap:10px;align-items:center}
-  .chip{padding:8px 12px;border-radius:999px;border:1px solid rgba(0,0,0,.08);background:transparent;cursor:pointer;white-space:nowrap}
+  header{position:sticky;top:0;background:rgba(255,255,255,.92);padding:8px 12px;border-bottom:1px solid rgba(0,0,0,.06);z-index:10;display:flex;align-items:center;gap:10px;overflow:auto}
+  .nav-left{display:flex;gap:8px;align-items:center}
+  .chip{padding:7px 11px;border-radius:999px;border:1px solid rgba(0,0,0,.08);background:transparent;cursor:pointer;white-space:nowrap}
+  select.chip{font-size:13px; padding:6px 10px; min-width:86px; max-width:120px}
   .grow{flex:1}
-  main{max-width:900px;margin:22px auto;padding:0 var(--pad)}
-  .hero{padding:6px 0 18px;text-align:center}
-  .h1{font-weight:900;font-size:clamp(28px,5vw,44px);margin:6px 0}
-  .lead{color:rgba(0,0,0,.75);font-size:16px;margin:8px 0 16px}
+  main{max-width:var(--maxw);margin:0 auto;padding:0 var(--pad)}
+  .hero{max-width:720px;margin:12vh auto 8vh;text-align:center}
+  .h1{font-weight:900;font-size:clamp(28px,5.2vw,44px);margin:6px 0 10px}
+  .lead{color:rgba(0,0,0,.75);font-size:16px;margin:8px 0 18px}
   .btn{display:inline-block;padding:12px 18px;border-radius:12px;border:1px solid rgba(0,0,0,.08);cursor:pointer;font-weight:700}
-  .cards{display:grid;gap:14px;margin-top:8px}
+  .cards{display:grid;gap:14px;margin:0 auto 16vh;max-width:760px}
   .card{border:1px solid rgba(0,0,0,.08);border-radius:14px;padding:12px;background:#fff}
   .card h3{margin:6px 0;font-size:18px}
   .muted{opacity:.7;font-size:14px}
@@ -27,7 +28,7 @@
   .detail .content{padding:16px;border-radius:12px;border:1px solid rgba(0,0,0,.08);background:#fff}
   .pill{display:inline-block;padding:8px 12px;border-radius:999px;background:#f3f6ff;font-weight:800;margin:10px 0}
   .long{font-size:18px;line-height:1.9;color:#111}
-  footer{max-width:900px;margin:40px auto;padding:0 var(--pad);color:rgba(0,0,0,.6);font-size:13px;text-align:center}
+  footer{max-width:var(--maxw);margin:0 auto 26px;padding:0 var(--pad);color:rgba(0,0,0,.6);font-size:13px;text-align:center}
   @media (prefers-color-scheme:dark){
     body{background:#050507;color:#e9e9ee}
     header{background:rgba(5,5,7,.6);border-bottom:1px solid rgba(255,255,255,.06)}
@@ -61,8 +62,8 @@
   <section id="home" class="page" style="display:block">
     <div class="hero">
       <div class="h1" id="heroTitle">变量道 · 心理自救</div>
-      <div class="lead" id="heroLead">他们给你故事，你只被分配到角色。我们给你笔。</div>
-      <button id="startBtn" class="btn">我来执笔</button>
+      <div class="lead" id="heroLead">他们给你故事，你只被分配到角色。 我们给你笔。</div>
+      <button id="startBtn" class="btn">🖊️ 我来执笔</button>
     </div>
 
     <div class="cards" id="cardsList">
@@ -244,7 +245,7 @@ B의 이야기는 다른 판본:
   }]
 };
 
-// ====== 语言与导航逻辑（简化版，满足你当前复制需求）======
+// ====== 语言与导航逻辑（简化版）======
 const state = { 
   lang: (new URL(location.href)).searchParams.get('lang') || localStorage.getItem('vd_lang') || (navigator.language||'en').slice(0,2),
   layout: localStorage.getItem('vd_layout') || 'mobile'
@@ -264,11 +265,8 @@ function renderCards(){
 function openDetail(c){
   const det=document.getElementById('detail'); const box=document.getElementById('detailContent');
   const txt=(c.body[state.lang]&&c.body[state.lang].trim())?c.body[state.lang]:c.body.zh;
-  // 加入分割 pill（故事/道骨/道证/觉悟）
-  let html = txt.replace(/
-
-/g,'</p><p>').replace(/
-/g,'<br>');
+  // 分割 pill（故事/道骨/道证/觉悟）
+  let html = txt.replace(/\n\n/g,'</p><p>').replace(/\n/g,'<br>');
   html = html.replace(/变量道\s*·\s*道骨|Variable Dao\s*·\s*Bone|変数道・骨|변수도\s*·\s*뼈/g,'</p><div class="pill">道骨</div><p>');
   html = html.replace(/变量道\s*·\s*道证|Variable Dao\s*·\s*Evidence|変数道・証|변수도\s*·\s*증거/g,'</p><div class="pill">道证</div><p>');
   html = html.replace(/变量道\s*·\s*觉悟|Variable Dao\s*·\s*Insight|変数道・悟り|변수도\s*·\s*깨달음/g,'</p><div class="pill">觉悟</div><p>');
@@ -276,7 +274,10 @@ function openDetail(c){
   det.classList.add('active'); det.setAttribute('aria-hidden','false'); det.scrollIntoView({behavior:'smooth'});
 }
 
-document.getElementById('startBtn').addEventListener('click', ()=>{ document.getElementById('home').scrollIntoView({behavior:'smooth'}); });
+document.getElementById('startBtn').addEventListener('click', ()=>{
+  // 修复：点击“我来执笔”滚动到卡片列表
+  document.getElementById('cardsList').scrollIntoView({behavior:'smooth', block:'start'});
+});
 document.querySelectorAll('.nav-link').forEach(btn=>btn.addEventListener('click', (e)=>{
   const target = e.currentTarget.dataset.target;
   document.querySelectorAll('.page').forEach(p=>p.style.display='none');
